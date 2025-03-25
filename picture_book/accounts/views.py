@@ -20,6 +20,10 @@ def user_login(request):
         password = login_form.cleaned_data.get('password')
         # 認証処理
         user = authenticate(request, email=email, password=password)
+        if user is not None and user.is_authenticated:
+            login(request, user)
+        else:
+            login_form.add_error('email','メールアドレスまたはバスワードが間違っています')
     return render(request, 'accounts/login.html', context={
         'login_form': login_form
     })
