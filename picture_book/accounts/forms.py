@@ -19,3 +19,7 @@ class RegistForm(UserCreationForm):
             'password1':'パスワード',
             'password2':'パスワード(再入力)',
         }
+        
+class UserLoginForm(forms.Form):
+    email = forms.EmailField(label='メールアドレス')
+    password = forms.CharField(label='パスワード', max_length=225, widget=forms.PasswordInput())
