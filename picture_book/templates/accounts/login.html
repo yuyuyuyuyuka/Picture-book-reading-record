@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>お話の足跡</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ login_form.as_p }}
+    <input type="submit" value="ログイン">
+</form>
+
+<h3>※パスワードを忘れた方はこちら</h3>
+
+<h3>初めてご利用の方は</h3>
+<a href="{% url 'accounts:regist' %}"><span style="color:red">アカウント登録</span></a>
+{% endblock %}
