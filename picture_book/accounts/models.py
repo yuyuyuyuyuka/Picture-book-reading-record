@@ -25,7 +25,7 @@ class UserManager(BaseUserManager):
 
 # ユーザーモデル
 class User(AbstractBaseUser, PermissionsMixin):
-    family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
+    # family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
     username = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
