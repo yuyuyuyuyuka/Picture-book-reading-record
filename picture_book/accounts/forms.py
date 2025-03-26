@@ -2,6 +2,7 @@ from django import forms
 from .models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.exceptions import ValidationError
 
 
 class RegistForm(UserCreationForm):
@@ -23,3 +24,16 @@ class RegistForm(UserCreationForm):
 class UserLoginForm(forms.Form):
     email = forms.EmailField(label='メールアドレス')
     password = forms.CharField(label='パスワード', max_length=225, widget=forms.PasswordInput())
+    
+    
+class RequestPasswordResetForm(forms.Form):
+    email = forms.EmailField(
+        label='メールアドレス',
+        widget=forms.EmailInput()
+    )
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise ValidationError('このメールアドレスに対応するユーザーは存在しません')
+        return email
