@@ -40,3 +40,7 @@ def user_logout(request):
     logout(request)
     messages.success(request, 'ログアウトしました')
     return redirect('accounts:login')
+
+# パスワード再設定
+def request_password_reset(request):
+    pass
