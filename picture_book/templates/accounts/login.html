@@ -7,7 +7,8 @@
     <input type="submit" value="ログイン">
 </form>
 
-<h3>※パスワードを忘れた方はこちら</h3>
+<p><a href="{% url 'accounts:request_password_reset' %}">※パスワードを忘れた方はこちら</a></p>
+
 
 <h3>初めてご利用の方は</h3>
 <a href="{% url 'accounts:regist' %}"><span style="color:red">アカウント登録</span></a>
