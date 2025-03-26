@@ -7,10 +7,12 @@
 </head>
 <body>
     <nav>
+        {% comment %} <a href="{% url 'picture_book_app: home' %}">登録</a> {% endcomment %}
         <a href="{% url 'accounts:regist' %}">登録</a>
+        <a href="{% url 'accounts:logout' %}">ログアウト</a>
     </nav>
     <div>
-        
+
         {% if messages %}
             {% for message in messages %}
                 {{ message }}

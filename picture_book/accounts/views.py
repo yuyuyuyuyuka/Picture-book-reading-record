@@ -3,7 +3,7 @@ from .forms import RegistForm, UserLoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-
+# アカウント作成
 def regist(request):
     user_form = RegistForm(request.POST or None)
     if user_form.is_valid():
@@ -15,6 +15,7 @@ def regist(request):
         'user_form': user_form
     })
     
+# ログイン
 def user_login(request):
     login_form = UserLoginForm(request.POST or None)
     if login_form.is_valid():
@@ -31,3 +32,9 @@ def user_login(request):
     return render(request, 'accounts/login.html', context={
         'login_form': login_form
     })
+    
+# ログアウト
+def user_logout(request):
+    logout(request)
+    messages.success(request, 'ログインしました')
+    return redirect('accounts:login')
