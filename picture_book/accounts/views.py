@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import RegistForm, UserLoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # アカウント作成
 def regist(request):
@@ -10,7 +11,7 @@ def regist(request):
         user = user_form.save()
         login(request, user)
         messages.success(request,'アカウントが作成されました')
-        # return redirect ('picture_book_app: home')
+        return redirect ('picture_book_app: home')
     return render(request, 'accounts/registration.html', context={
         'user_form': user_form
     })
@@ -26,7 +27,7 @@ def user_login(request):
         if user is not None and user.is_authenticated:
             login(request, user)
             messages.success(request, 'ログインできました')
-            # return redirect('picture_book_app: home')
+            return redirect('picture_book_app: home')
         else:
             messages.error(request,'メールアドレスまたはバスワードが間違っています')
     return render(request, 'accounts/login.html', context={
@@ -34,7 +35,8 @@ def user_login(request):
     })
     
 # ログアウト
+@login_required
 def user_logout(request):
     logout(request)
-    messages.success(request, 'ログインしました')
+    messages.success(request, 'ログアウトしました')
     return redirect('accounts:login')
