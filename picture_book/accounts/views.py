@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect
-from .forms import RegistForm, UserLoginForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import RegistForm, UserLoginForm, RequestPasswordResetForm
+from .models import PasswordResetToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+import uuid
 
 # アカウント作成
 def regist(request):
@@ -43,4 +46,19 @@ def user_logout(request):
 
 # パスワード再設定
 def request_password_reset(request):
-    pass
+    form = RequestPasswordResetForm(request.POST or None)
+    if form.is_valid():
+        email = form.cleaned_data['email']
+        user = get_object_or_404(User, email=email)
+        # 新しいトークン作成
+        password_reset_token, created = PasswordResetToken.objects.get_or_create(user=user)
+        if not created:
+            password_reset_token.token = uuid.uuid4
+            password_reset_token.used = False
+            password_reset_token.save()
+        user.is_active = False
+        user.save()
+        print(password_reset_token.token)
+    return render(request, 'accounts/password_reset_form.html', context={
+        'reset_form':form
+    })
