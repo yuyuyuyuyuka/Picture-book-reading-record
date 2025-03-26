@@ -10,6 +10,13 @@
         <a href="{% url 'accounts:regist' %}">登録</a>
     </nav>
     <div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+
         {% block content %}
         {% endblock %}
     </div>
