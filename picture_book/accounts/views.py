@@ -57,6 +57,10 @@ def request_password_reset(request):
         email = form.cleaned_data['email']
         User = get_user_model()
         user = get_object_or_404(User, email=email)
+        
+        # メールアドレスをセッションに保存
+        request.session['password_reset_email'] = email
+        
         # 新しいトークン作成
         password_reset_token, created = PasswordResetToken.objects.get_or_create(user=user)
         if not created:
@@ -92,5 +96,8 @@ def request_password_reset(request):
     
 # パスワード再設定リンク送信完了画面
 def password_reset_done(request):
-    return render (request, 'password_reset_done.html')
+    email = request.session.get('password_reset_email', None)
+    return render (request, 'password_reset_done.html', context={
+        'email':email
+    })
 
