@@ -85,8 +85,12 @@ def request_password_reset(request):
             fail_silently=False,
         )
         
-        return redirect('password_reset_done')
+        return redirect('accounts:password_reset_done')
     return render(request, 'accounts/password_reset_form.html', context={
         'reset_form':form
     })
     
+# パスワード再設定リンク送信完了画面
+def password_reset_done(request):
+    return render (request, 'password_reset_done.html')
+
