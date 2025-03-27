@@ -5,7 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 import uuid
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.urls import reverse
 
 # アカウント作成
 def regist(request):
@@ -14,7 +17,7 @@ def regist(request):
         user = user_form.save()
         login(request, user)
         messages.success(request,'アカウントが作成されました')
-        return redirect ('picture_book_app: home')
+        return redirect ('picture_book_app:home')
     return render(request, 'accounts/registration.html', context={
         'user_form': user_form
     })
@@ -30,7 +33,7 @@ def user_login(request):
         if user is not None and user.is_authenticated:
             login(request, user)
             messages.success(request, 'ログインできました')
-            return redirect('picture_book_app: home')
+            return redirect('picture_book_app:home')
         else:
             messages.error(request,'メールアドレスまたはバスワードが間違っています')
     return render(request, 'accounts/login.html', context={
@@ -49,16 +52,21 @@ def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
     if form.is_valid():
         email = form.cleaned_data['email']
+        User = get_user_model()
         user = get_object_or_404(User, email=email)
         # 新しいトークン作成
         password_reset_token, created = PasswordResetToken.objects.get_or_create(user=user)
         if not created:
-            password_reset_token.token = uuid.uuid4
+            password_reset_token.token = uuid.uuid4()
             password_reset_token.used = False
             password_reset_token.save()
         user.is_active = False
         user.save()
-        print(password_reset_token.token)
+        
+        # リセット用URL作成
+        token = password_reset_token.token
+        uidb64 = urlsafe_base64_encode(str(user.pk).encode())
+        reset_url = request.build_absoluteuri(reverse('password_reset_comfirm', args=[uidb64, token]))
     return render(request, 'accounts/password_reset_form.html', context={
         'reset_form':form
     })

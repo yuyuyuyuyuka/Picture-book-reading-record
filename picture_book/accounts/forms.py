@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
-
+# 新規アカウント登録
 class RegistForm(UserCreationForm):
     
     class Meta:
@@ -20,12 +20,13 @@ class RegistForm(UserCreationForm):
             'password1':'パスワード',
             'password2':'パスワード(再入力)',
         }
-        
+
+# ログインフォーム
 class UserLoginForm(forms.Form):
     email = forms.EmailField(label='メールアドレス')
     password = forms.CharField(label='パスワード', max_length=225, widget=forms.PasswordInput())
     
-    
+# パスワードリセット
 class RequestPasswordResetForm(forms.Form):
     email = forms.EmailField(
         label='メールアドレス',
