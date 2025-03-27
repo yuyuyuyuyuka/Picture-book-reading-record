@@ -9,6 +9,9 @@ from django.contrib.auth import get_user_model
 import uuid
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.conf import settings
 
 # アカウント作成
 def regist(request):
@@ -67,6 +70,23 @@ def request_password_reset(request):
         token = password_reset_token.token
         uidb64 = urlsafe_base64_encode(str(user.pk).encode())
         reset_url = request.build_absoluteuri(reverse('password_reset_comfirm', args=[uidb64, token]))
+        
+        # メールの内容作成
+        subject = 'パスワード再設定のお知らせ'
+        message = render_to_string(request,'accounts/password_reset_email.html', context={
+            'user':user,
+            'reset_url':reset_url,
+        })
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+        
+        return redirect('password_reset_done')
     return render(request, 'accounts/password_reset_form.html', context={
         'reset_form':form
     })
+    
