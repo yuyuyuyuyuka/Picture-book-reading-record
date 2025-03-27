@@ -72,7 +72,7 @@ def request_password_reset(request):
         reset_url = request.build_absoluteuri(reverse('password_reset_comfirm', args=[uidb64, token]))
         
         # メールの内容作成
-        subject = 'パスワード再設定のお知らせ'
+        subject = '【お話の足跡】パスワード再設定のお知らせ'
         message = render_to_string(request,'accounts/password_reset_email.html', context={
             'user':user,
             'reset_url':reset_url,
