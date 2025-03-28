@@ -149,3 +149,7 @@ def password_reset_confirm(request, token, uidb64):
         'form':form,
         'password_rules':password_rules,
     })
+
+# パスワード再設定完了画面
+def password_reset_complete(request):
+    return render(request, 'accounts/password_reset_complete.html')
