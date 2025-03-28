@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegistForm, UserLoginForm, RequestPasswordResetForm
+from django.contrib.auth.forms import SetPasswordForm
 from .models import PasswordResetToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -12,6 +13,8 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError
 
 # アカウント作成
 def regist(request):
@@ -101,3 +104,49 @@ def password_reset_done(request):
         'email':email
     })
 
+# 新しいパスワード再設定画面
+def password_reset_comfirm(request, token, uidb64):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError,User.DoesNotExist):
+        raise ValidationError('このリンクは無効です。再度パスワードリセットを試してください。')
+        
+    # パスワードリセットトークン取得
+    password_reset_token = get_object_or_404(
+        PasswordResetToken,
+        token=token,
+        user=user,
+        used = False
+    )
+    # トークンの有効性
+    if not default_token_generator.check_token(user, token):
+        raise ValidationError('このリンクは無効です。再度パスワードリセットを試してください。')
+    
+    # パスワードのリセットのフォーム
+    form = SetPasswordForm(request.POST or None, user=user)
+    
+    if form.is_valid():
+        password = form.cleaned_data['new_password1']
+        user.set_password(password)
+        user.is_active = True
+        user.save()
+        
+        # トークン使用済み
+        password_reset_token.used = True
+        password_reset_token.save()
+        
+        return redirect('accounts:password_reset_complate')
+    
+    # パスワードのルール表示
+    password_rules =[
+        '●あなたの他の個人情報と似ているパスワードにはできません。',
+        '●パスワードは最低 8 文字以上必要です。',
+        '●使える文字は半角英数になります。',
+        '●英大文字・小文字・数字を必ず含んでください。'
+    ]
+        
+    return render(request, 'accounts/password_reset_comfirm.html', context={
+        'form':form,
+        'password_rules':password_rules,
+    })
