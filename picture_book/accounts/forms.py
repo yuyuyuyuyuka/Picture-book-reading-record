@@ -38,3 +38,20 @@ class RequestPasswordResetForm(forms.Form):
         if not User.objects.filter(email=email).exists():
             raise ValidationError('このメールアドレスに対応するユーザーは存在しません')
         return email
+    
+# 新しいパスワードの入力画面でパスワードと再入力のパスワードが一致しない場合のエラー表示
+class NewSetPasswordForm(forms.Forme):
+    password1 = forms.CharField(label='パスワード', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='パスワード（再入力）', widget=forms.PasswordInput)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        
+        if password1 and password2:
+            if password1 != password2:
+                raise ValidationError('パスワードが一致しません')
+        else:
+            raise ValidationError('パスワードを設定してください')
+        return password2

@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistForm, UserLoginForm, RequestPasswordResetForm
-from django.contrib.auth.forms import SetPasswordForm
+from .forms import RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm
 from .models import PasswordResetToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -110,7 +109,7 @@ def password_reset_comfirm(request, token, uidb64):
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError,User.DoesNotExist):
-        raise ValidationError('このリンクは無効です。再度パスワードリセットを試してください。')
+        raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
         
     # パスワードリセットトークン取得
     password_reset_token = get_object_or_404(
@@ -121,10 +120,10 @@ def password_reset_comfirm(request, token, uidb64):
     )
     # トークンの有効性
     if not default_token_generator.check_token(user, token):
-        raise ValidationError('このリンクは無効です。再度パスワードリセットを試してください。')
+        raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
     
     # パスワードのリセットのフォーム
-    form = SetPasswordForm(request.POST or None, user=user)
+    form = NewSetPasswordForm(request.POST or None, user=user)
     
     if form.is_valid():
         password = form.cleaned_data['new_password1']
