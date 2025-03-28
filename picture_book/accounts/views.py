@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
+import logging
 
 # アカウント作成
 def regist(request):
@@ -107,23 +108,34 @@ def password_reset_done(request):
     })
 
 # 新しいパスワード再設定画面
+logger = logging.getLogger(__name__)
+
 def password_reset_confirm(request, token, uidb64):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         User = get_user_model()
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError,User.DoesNotExist):
-        raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
+        logger.error(f"Password reset token does not exist or has already been used for token: {token} and user: {user.username}")
+        return redirect('accounts:request_password_reset')
+    
+    logger.info(f"Token received: {token} for user: {user.username}")
+    try:
+        # パスワードリセットトークン取得
+        password_reset_token = get_object_or_404(
+            PasswordResetToken,
+            token=token,
+            user=user,
+            used = False
+        )
+        logger.info(f"Password reset token found: {password_reset_token.token}")
+    except PasswordResetToken.DoesNotExist:
+            logger.error(f"Password reset token does not exist or has been used already for token: {token} and user: {user.username}")
+            raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
         
-    # パスワードリセットトークン取得
-    password_reset_token = get_object_or_404(
-        PasswordResetToken,
-        token=token,
-        user=user,
-        used = False
-    )
     # トークンの有効性
     if not default_token_generator.check_token(user, token):
+        logger.error(f"Invalid token: {token} for user: {user.username}")
         raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
     
     # パスワードのリセットのフォーム
@@ -136,6 +148,7 @@ def password_reset_confirm(request, token, uidb64):
         user.save()
         
         # トークン使用済み
+        password_reset_token = PasswordResetToken.objects.get(user=user, token=token)
         password_reset_token.used = True
         password_reset_token.save()
         
