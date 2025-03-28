@@ -99,7 +99,9 @@ def request_password_reset(request):
 # パスワード再設定リンク送信完了画面
 def password_reset_done(request):
     email = request.session.get('password_reset_email', None)
-    return render (request, 'password_reset_done.html', context={
+    if email is None:
+        email = 'メールアドレスを取得できませんでした'
+    return render (request, 'accounts/password_reset_done.html', context={
         'email':email
     })
 

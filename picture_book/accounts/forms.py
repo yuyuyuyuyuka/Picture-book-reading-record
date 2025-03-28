@@ -40,7 +40,7 @@ class RequestPasswordResetForm(forms.Form):
         return email
     
 # 新しいパスワードの入力画面でパスワードと再入力のパスワードが一致しない場合のエラー表示
-class NewSetPasswordForm(forms.Forme):
+class NewSetPasswordForm(forms.Form):
     password1 = forms.CharField(label='パスワード', widget=forms.PasswordInput)
     password2 = forms.CharField(label='パスワード（再入力）', widget=forms.PasswordInput)
     
