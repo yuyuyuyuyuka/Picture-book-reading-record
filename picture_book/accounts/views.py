@@ -75,14 +75,15 @@ def request_password_reset(request):
         # リセット用URL作成
         token = password_reset_token.token
         uidb64 = urlsafe_base64_encode(str(user.pk).encode())
-        reset_url = request.build_absoluteuri(reverse('password_reset_comfirm', args=[uidb64, token]))
+        reset_url = request.build_absolute_uri(reverse('accounts:password_reset_confirm', args=[uidb64, token]))
         
         # メールの内容作成
         subject = '【お話の足跡】パスワード再設定のお知らせ'
-        message = render_to_string(request,'accounts/password_reset_email.html', context={
+        message = render_to_string('accounts/password_reset_email.html', context={
             'user':user,
             'reset_url':reset_url,
         })
+        
         send_mail(
             subject,
             message,
@@ -109,6 +110,7 @@ def password_reset_done(request):
 def password_reset_confirm(request, token, uidb64):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
+        User = get_user_model()
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError,User.DoesNotExist):
         raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
