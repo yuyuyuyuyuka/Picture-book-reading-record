@@ -104,7 +104,7 @@ def password_reset_done(request):
     })
 
 # 新しいパスワード再設定画面
-def password_reset_comfirm(request, token, uidb64):
+def password_reset_confirm(request, token, uidb64):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User.objects.get(pk=uid)
@@ -135,7 +135,7 @@ def password_reset_comfirm(request, token, uidb64):
         password_reset_token.used = True
         password_reset_token.save()
         
-        return redirect('accounts:password_reset_complate')
+        return redirect('accounts:password_reset_complete')
     
     # パスワードのルール表示
     password_rules =[
@@ -145,7 +145,7 @@ def password_reset_comfirm(request, token, uidb64):
         '●英大文字・小文字・数字を必ず含んでください。'
     ]
         
-    return render(request, 'accounts/password_reset_comfirm.html', context={
+    return render(request, 'accounts/password_reset_confirm.html', context={
         'form':form,
         'password_rules':password_rules,
     })
