@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
 
 # ユーザーモデル
 class User(AbstractBaseUser, PermissionsMixin):
-    # family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
+    family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
     username = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
@@ -62,3 +62,24 @@ class PasswordResetToken(models.Model):
     
     def __str__(self):
         return f'Reset token for {self.user.email}'
+
+
+# 家族モデル
+class Family(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f'Family {self.id}'
+
+
+# 子どもモデル
+class Child(models.Model):
+    family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=225)
+    birthday = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
