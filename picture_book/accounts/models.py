@@ -4,6 +4,7 @@ from django.contrib.auth.models import(
 )
 from django.contrib.auth.models import User
 import uuid
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -57,6 +58,7 @@ class PasswordResetToken(models.Model):
     )
     token = models.UUIDField(default=uuid.uuid4, db_index=True, unique=True)
     used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         return f'Reset token for {self.user.email}'

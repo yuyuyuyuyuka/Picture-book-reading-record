@@ -15,6 +15,8 @@ from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 import logging
+from django.utils import timezone
+from datetime import timedelta
 
 # アカウント作成
 def regist(request):
@@ -126,12 +128,19 @@ def password_reset_confirm(request, token, uidb64):
             PasswordResetToken,
             token=token,
             user=user,
-            used = False
+            used=False
         )
         logger.info(f"Password reset token found: {password_reset_token.token}")
-    except PasswordResetToken.DoesNotExist:
-            logger.error(f"Password reset token does not exist or has been used already for token: {token} and user: {user.username}")
+        
+        # トークンの期限切れか確認
+        token_expiry = timedelta(minutes=10)
+        if password_reset_token and (timezone.now() - password_reset_token.created_at > token_expiry):
+            logger.error(f"Token {token} has expired for user: {user.username}")
             raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
+
+    except PasswordResetToken.DoesNotExist:
+        logger.error(f"Password reset token does not exist or has been used already for token: {token} and user: {user.username}")
+        raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
         
     # トークンの有効性
     if not default_token_generator.check_token(user, token):
@@ -155,7 +164,7 @@ def password_reset_confirm(request, token, uidb64):
         return redirect('accounts:password_reset_complete')
     
     # パスワードのルール表示
-    password_rules =[
+    password_rules = [
         '●あなたの他の個人情報と似ているパスワードにはできません。',
         '●パスワードは最低 8 文字以上必要です。',
         '●使える文字は半角英数になります。',
@@ -165,6 +174,7 @@ def password_reset_confirm(request, token, uidb64):
     return render(request, 'accounts/password_reset_confirm.html', context={
         'form':form,
         'password_rules':password_rules,
+        'error_message': 'パスワードリセットリンクが無効です。再度パスワードリセットを試してください。',
     })
 
 # パスワード再設定完了画面
