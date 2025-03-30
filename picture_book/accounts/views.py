@@ -156,8 +156,8 @@ def password_reset_confirm(request, token, uidb64):
     # パスワードのリセットのフォーム
     form = NewSetPasswordForm(request.POST or None, user=user)
     
-    if form.is_valid():
-        password = form.cleaned_data['new_password1']
+    if request.method == 'POST' and form.is_valid():
+        password = form.cleaned_data['password1']
         user.set_password(password)
         user.is_active = True
         user.save()
