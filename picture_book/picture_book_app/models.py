@@ -1,12 +1,15 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+import uuid
 
-# 子どもモデル
-class Child(models.Model):
-    family = models.ForeignKey('accounts.Family', on_delete=models.SET_NULL, null=True, blank=True)
-    name = models.CharField(max_length=225)
-    birthday = models.DateField()
+User = get_user_model()
+
+# PasswordResetTokenのモデルが必要
+class PasswordResetToken(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    used = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
-        return self.name
+        return f"{self.user.username} - {self.token}"
