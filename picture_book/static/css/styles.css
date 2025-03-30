@@ -1,0 +1,15 @@
+html, body {
+    height: 100%; /* ページ全体を使う */
+    margin: 0; /* 余白を削除 */
+    display: flex;
+    justify-content: center; /* 横方向の中央揃え */
+    align-items: center; /* 縦方向の中央揃え */
+  }
+  
+  form {
+    padding: 20px;
+    border: 1px solid #ccc; /* 任意で枠をつける */
+    border-radius: 8px; /* 角を丸くする */
+    width: 300px; /* 必要に応じて幅を調整 */
+  }
+  
