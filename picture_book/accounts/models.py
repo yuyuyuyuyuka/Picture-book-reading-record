@@ -5,6 +5,8 @@ from django.contrib.auth.models import(
 from django.contrib.auth.models import User
 import uuid
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+import uuid
 
 
 class UserManager(BaseUserManager):
@@ -50,18 +52,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
+User = get_user_model()
+
+# PasswordResetTokenのモデルが必要
 # パスワード再設定
 class PasswordResetToken(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE,
-        related_name='password_reset_token'
-    )
-    token = models.UUIDField(default=uuid.uuid4, db_index=True, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
     used = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=timezone.now)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return f'Reset token for {self.user.email}'
+        return f"{self.user.username} - {self.token}"
 
 
 # 家族モデル
