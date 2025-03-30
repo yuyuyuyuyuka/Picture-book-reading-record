@@ -129,8 +129,8 @@ AUTH_USER_MODEL = 'accounts.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# 1日
-PASSWORD_RESET_TIMEOUT = 86400
+# 1時間
+PASSWORD_RESET_TIMEOUT = 3600
 
 
 LOGGING = {
