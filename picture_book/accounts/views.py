@@ -69,7 +69,7 @@ def request_password_reset(request):
         # 新しいトークン作成
         password_reset_token, created = PasswordResetToken.objects.get_or_create(user=user)
         if not created:
-            password_reset_token.token = uuid.uuid4()
+            password_reset_token.token = uuid.uuid4() # 独自トークンの発行
             password_reset_token.used = False
             password_reset_token.created_at = timezone.now()
             password_reset_token.save()
@@ -121,9 +121,10 @@ def password_reset_confirm(request, token, uidb64):
         user = User.objects.get(pk=uid)
         logger.info(f"Token received: {token} for user: {user.username}")
             # トークンの有効性
-        if not default_token_generator.check_token(user, token):
-            logger.error(f"Invalid token for uid: {uidb64} (user: {user.username})")
-            raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
+
+        # if not default_token_generator.check_token(user, token):
+        #    logger.error(f"Invalid token for uid: {uidb64} (user: {user.username})")
+        #    raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
         
     except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
         logger.error(f"Password reset failed for token: {token} and uid: {uidb64} - {str(e)}")
@@ -141,7 +142,7 @@ def password_reset_confirm(request, token, uidb64):
         )
         logger.info(f"Password reset token found: {password_reset_token.token}")
         
-        # トークンの期限切れか確認
+        # トークンの期限切れか確認　⇦ちゃんとチェックできてる
         token_expiry = timedelta(hours=1)
         if timezone.now() - password_reset_token.created_at > token_expiry:
             logger.error(f"Token {token} has expired for user: {user.username}")
