@@ -72,14 +72,3 @@ class Family(models.Model):
     def __str__(self):
         return f'Family {self.id}'
 
-
-# 子どもモデル
-class Child(models.Model):
-    family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
-    name = models.CharField(max_length=225)
-    birthday = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.name
