@@ -69,9 +69,11 @@ def request_password_reset(request):
         # 新しいトークン作成
         password_reset_token, created = PasswordResetToken.objects.get_or_create(user=user)
         if not created:
-            password_reset_token.token = uuid.uuid4()
-            password_reset_token.used = False
-            password_reset_token.save()
+            if password_reset_token.used:
+                password_reset_token.token = uuid.uuid4()
+                password_reset_token.used = False
+                password_reset_token.created_at = timezone.now()
+                password_reset_token.save()
         user.is_active = False
         user.save()
         
@@ -117,8 +119,14 @@ def password_reset_confirm(request, token, uidb64):
         uid = urlsafe_base64_decode(uidb64).decode()
         User = get_user_model()
         user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError,User.DoesNotExist):
-        logger.error(f"Password reset token does not exist or has already been used for token: {token} and user: {user.username}")
+        
+            # トークンの有効性
+        if not default_token_generator.check_token(user, token):
+            logger.error(f"Invalid or expired token for user: {user.username}")
+            raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
+        
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist)as e:
+        logger.error(f"Password reset failed for token: {token} and uid: {uidb64} - {str(e)}")
         return redirect('accounts:request_password_reset')
     
     logger.info(f"Token received: {token} for user: {user.username}")
@@ -133,8 +141,8 @@ def password_reset_confirm(request, token, uidb64):
         logger.info(f"Password reset token found: {password_reset_token.token}")
         
         # トークンの期限切れか確認
-        token_expiry = timedelta(minutes=10)
-        if password_reset_token and (timezone.now() - password_reset_token.created_at > token_expiry):
+        token_expiry = timedelta(days=1)
+        if timezone.now() - password_reset_token.created_at > token_expiry:
             logger.error(f"Token {token} has expired for user: {user.username}")
             raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
 
@@ -142,10 +150,6 @@ def password_reset_confirm(request, token, uidb64):
         logger.error(f"Password reset token does not exist or has been used already for token: {token} and user: {user.username}")
         raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
         
-    # トークンの有効性
-    if not default_token_generator.check_token(user, token):
-        logger.error(f"Invalid token: {token} for user: {user.username}")
-        raise ValidationError('パスワードリセットリンクが無効です。再度パスワードリセットを試してください。')
     
     # パスワードのリセットのフォーム
     form = NewSetPasswordForm(request.POST or None, user=user)
@@ -157,7 +161,6 @@ def password_reset_confirm(request, token, uidb64):
         user.save()
         
         # トークン使用済み
-        password_reset_token = PasswordResetToken.objects.get(user=user, token=token)
         password_reset_token.used = True
         password_reset_token.save()
         
