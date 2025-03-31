@@ -1,17 +1,34 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>お話の足跡</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <nav>
-        <a href="{% url 'picture_book_app:home' %}">ホーム</a>
-        <a href="{% url 'accounts:regist' %}">登録</a>
-        <a href="{% url 'accounts:logout' %}">ログアウト</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'picture_book_app:home' %}">お話の足跡</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'picture_book_app:home' %}">ホーム</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:regist' %}">登録</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:logout' %}">ログアウト</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
     <div>
 
@@ -24,6 +41,6 @@
         {% block content %}
         {% endblock %}
     </div>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0o6XxfmS2AnOeq48J4c+9h5fRl+VJYk5oN2zqZyFRz6buE8Z" crossorigin="anonymous"></script>
 </body>
 </html>
