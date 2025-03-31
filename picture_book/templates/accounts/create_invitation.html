@@ -1,26 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>家族招待</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ user_form.as_p }}
-    <button type="submit">家族招待URLを作成する</button>
-</form>
-{% if invitation_url %}
-    <input type="text" value="{{ invitation_url }}" id="invitation_url"readonly>
-    <button onclick="copyToClipboard()">コピー</button>
-    <script>
-        function copyToClipboard() {
-            var copyText = document.getElementById("invitation_url");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);  
-            document.execCommand("copy");
-        }
-    </script>
-    <p>※このリンクを招待したい家族に送ってください。</p>
-    <p>※リンクは1度利用されると無効になります。</p>
+<div class="container">
+    <h1>家族招待</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <button type="submit">家族招待URLを作成する</button>
+    </form>
+    {% if invitation_url %}
+        <input type="text" value="{{ invitation_url }}" id="invitation_url"readonly>
+        <button onclick="copyToClipboard()">コピー</button>
+        <script>
+            function copyToClipboard() {
+                var copyText = document.getElementById("invitation_url");
+                copyText.select();
+                copyText.setSelectionRange(0, 99999);  
+                document.execCommand("copy");
+            }
+        </script>
+        <p>※このリンクを招待したい家族に送ってください。</p>
+        <p>※リンクは1度利用されると無効になります。</p>
 
-    <p>マイページへ戻る</p>
+        <p>マイページへ戻る</p>
 
-{% endif %}
+    {% endif %}
+</div>
 {% endblock %}
