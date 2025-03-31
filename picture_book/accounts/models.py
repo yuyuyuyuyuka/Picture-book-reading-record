@@ -4,6 +4,7 @@ from django.contrib.auth.models import(
 )
 from django.contrib.auth.models import User
 import uuid
+from datetime import timedelta
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 import uuid
@@ -74,3 +75,41 @@ class Family(models.Model):
     def __str__(self):
         return f'Family {self.id}'
 
+# 家族招待モデル
+class Invitation(models.Model):
+    family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True, related_name='family_invitations')
+    user_id = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='user_invitations')
+    invite_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    
+    def get_expiry_data(self):
+        return timezone.now()+timedelta(days=1)
+    
+    expiry_date = models.DateTimeField(default=get_expiry_data)
+    
+    STATUS_CHOICES = (
+        (0, '未使用'),
+        (1, '使用済み'),
+        (2, '期限切れ'),
+    )
+    
+    used = models.IntegerField(choices=STATUS_CHOICES, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
+    
+    # 招待の状態
+    # 未使用かつ現在時刻より有効期限が前であれば招待OK
+    def is_valid(self):
+        return self.used ==0 and timezone.now() < self.expiry_date
+    
+    # 使用済み
+    def set_used(self):
+        self.used = 1
+        self.save()
+        
+    # 期限切れ
+    def set_expired(self):
+        self.used = 2
+        self.save()
+        
+    def __str__(self):
+        return f"招待トークン {self.invite_token} - {self.get_used_display()}"
