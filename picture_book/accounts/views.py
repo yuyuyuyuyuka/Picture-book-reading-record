@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm
+from .forms import(
+    RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
+    InvitationForm,
+    )
 from .models import PasswordResetToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -190,3 +193,23 @@ def password_reset_confirm(request, token, uidb64):
 # パスワード再設定完了画面
 def password_reset_complete(request):
     return render(request, 'accounts/password_reset_complete.html')
+
+
+# 家族招待URL画面の招待URLを作成
+def create_invitation(request):
+    invitation_url = ''
+    
+    if request.method == 'POST':
+        form = InvitationForm(request.POST)
+        if form.is_valid():
+            invitation = form.save()
+            invite_url = reverse('accounts:accept_invitation', kwargs={'invite_token':invitation.invite_token})
+            invitation_url = request.build_absolute_uri(invite_url)
+    
+    else:
+        form = InvitationForm()
+        
+    return render(request, 'accounts/create_invitation.html', context={
+        'form':form,
+        'invitation_url':invitation_url,
+    })
