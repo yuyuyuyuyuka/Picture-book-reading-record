@@ -81,7 +81,7 @@ class Invitation(models.Model):
     user_id = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='user_invitations')
     invite_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     
-    def get_expiry_data(self):
+    def get_expiry_data():
         return timezone.now()+timedelta(days=1)
     
     expiry_date = models.DateTimeField(default=get_expiry_data)
