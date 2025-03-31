@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Invitation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
@@ -79,3 +79,10 @@ class NewSetPasswordForm(forms.Form):
         else:
             raise ValidationError('パスワードを設定してください')
         return cleaned_data
+    
+
+# 家族招待URL作成画面
+class InvitationForm(forms.ModelForm):
+    class Meta:
+        model = Invitation
+        fields = ['family_id', 'user_id']
