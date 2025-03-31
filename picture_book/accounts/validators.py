@@ -15,6 +15,6 @@ class CustomPasswordValidator:
     
     def get_help_text(self):
         return (
-            '使える文字は半角英数になります。'
+            '使える文字は半角英数になります。\n' #改行コードを入れた状態で値を返す
             '英大文字・小文字・数字を必ず含んでください。'
         )
