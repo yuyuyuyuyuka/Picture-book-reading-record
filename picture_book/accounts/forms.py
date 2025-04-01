@@ -86,3 +86,35 @@ class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
         fields = ['family_id', 'user_id']
+        
+
+# 家族アカウント登録フォーム
+class FamilyRegistForm(forms.ModelForm):
+    password1 = forms.CharField(label='パスワード', widget=forms.PasswordInput())
+    password2 = forms.CharField(label='パスワード(再入力)', widget=forms.PasswordInput())
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+        widgets = {
+            'password1': forms.PasswordInput(),
+            'password2': forms.PasswordInput(),
+        }
+        labels = {
+            'username': '名前／ニックネーム',
+            'email': 'メールアドレス',
+            'password1': 'パスワード',
+            'password2': 'パスワード（再入力）',
+        }
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+
+        if password1 and password2:
+            if password1 != password2:
+                raise ValidationError('パスワードが一致しません')
+        else:
+            raise ValidationError('パスワードを設定してください')
+        return cleaned_data
