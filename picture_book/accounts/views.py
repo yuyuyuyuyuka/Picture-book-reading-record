@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
-    InvitationForm,
+    InvitationForm, FamilyRegistForm,
     )
-from .models import PasswordResetToken
+from .models import PasswordResetToken, Invitation, familyMember
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -212,4 +212,41 @@ def create_invitation(request):
     return render(request, 'accounts/create_invitation.html', context={
         'form':form,
         'invitation_url':invitation_url,
+    })
+
+
+# URLクリック→家族アカウント作成
+def accept_invitation(request, invite_token):
+    invitation = get_object_or_404(Invitation, invite_token=invite_token)
+    
+    if request.method == 'POST':
+        form = FamilyRegistForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data['password1']
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            
+            # 家族情報関連付け
+            family = invitation.family_id
+            family_member = familyMember.objects.create(user=user, family=family)
+            
+            # 招待を使用済みにする
+            invitation.set_used()
+            return redirect('picture_book_app:home')
+        
+        # アカウント登録が上手くいかなかったとき
+        else:
+            return render(request, 'accounts/family_registration.html', context={
+                'form': form,
+                'invitation':invitation,
+            })
+        
+    else:
+        form = FamilyRegistForm()
+            
+    return render(request, 'accounts/family_registration.html', context={
+        'form': form,
+        'invitation':invitation,
     })
