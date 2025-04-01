@@ -15,8 +15,9 @@
                 <span style="color:red;">{{ field.errors }}</span><br>
             {% endif %}
             {% if field.help_text %}
-                <!-- validatators.pyでカスタムしているhelp_textの\nを<br>に変換するためにlinebreaksbrを使用 -->
-                <small style="color:gray;">{{ field.help_text|linebreaksbr }}</small>
+                <div style="color: gray;">
+                    {{ field.help_text|safe }}
+                </div>
             {% endif %}
         </p>
         {% endfor %}
