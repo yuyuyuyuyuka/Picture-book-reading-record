@@ -219,6 +219,14 @@ def create_invitation(request):
 def accept_invitation(request, invite_token):
     invitation = get_object_or_404(Invitation, invite_token=invite_token)
     
+    # パスワードのルール表示
+    password_rules = [
+        'あなたの他の個人情報と似ているパスワードにはできません。',
+        'パスワードは最低 8 文字以上必要です。',
+        '使える文字は半角英数になります。',
+        '英大文字・小文字・数字を必ず含んでください。'
+    ]
+    
     if request.method == 'POST':
         form = FamilyRegistForm(request.POST)
         if form.is_valid():
@@ -246,14 +254,6 @@ def accept_invitation(request, invite_token):
         
     else:
         form = FamilyRegistForm()
-    
-    # パスワードのルール表示
-    password_rules = [
-        'あなたの他の個人情報と似ているパスワードにはできません。',
-        'パスワードは最低 8 文字以上必要です。',
-        '使える文字は半角英数になります。',
-        '英大文字・小文字・数字を必ず含んでください。'
-    ]
     
     return render(request, 'accounts/family_registration.html', context={
         'form': form,
