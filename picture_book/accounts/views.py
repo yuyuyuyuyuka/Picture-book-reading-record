@@ -263,4 +263,11 @@ def accept_invitation(request, invite_token):
     
     
 # 家族一覧画面
-
+def family_list(request):
+    
+    family = request.user.family_id
+    menber = FamilyMember.objects.filter(family=family)
+    
+    return render(request, 'accounts/family_list.html', context={
+        'menber': menber
+    })
