@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MinLengthValidator
+import re
 
 # 新規アカウント登録
 class RegistForm(UserCreationForm):
@@ -68,6 +69,24 @@ class NewSetPasswordForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)  # userを受け取れるように__init__を追加
         super().__init__(*args, **kwargs)
+
+    # バリデーション
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+        if len(password) < 8:
+            raise ValidationError('パスワードは最低8文字以上必要です。')
+        if not re.search(r'[A-Za-z]', password):
+            raise ValidationError('パスワードには英大文字・小文字を含めてください。')
+        if not re.search(r'[0-9]', password):
+            raise ValidationError('パスワードには数字を含めてください。')
+        if self.user:
+            if self.user.username in password or self.user.email.split('@')[0] in password:
+                raise ValidationError('あなたの名前やメールアドレスを含むパスワードは使用できません。')
+        if not re.match(r'^[A-Za-z0-9]+$', password):
+            raise ValidationError('使える文字は半角英数字のみです。')
+
+        return password
+
 
     def clean(self):
         cleaned_data = super().clean()
