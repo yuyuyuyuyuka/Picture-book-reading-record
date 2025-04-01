@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>家族アカウント登録</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom: 20px;">
+            <label for="username">名前／ニックネーム：</label>
+            {{ form.username }}
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label for="email">メールアドレス：</label>
+            {{ form.email }}
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label for="id_password1">パスワード：</label>
+            {{ form.password1 }}
+        </div>
+    
+        <div class="password-rules">
+            <ul>
+                {% for rule in password_rules %}
+                    <li>{{ rule }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label for="id_password2">パスワード(再入力)：</label>
+            {{ form.password2 }}
+        </div>
+        {% if form.errors %}
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+        <input type="submit" value="登録">
+    </form>
+</div>
+{% endblock %}

@@ -241,12 +241,22 @@ def accept_invitation(request, invite_token):
             return render(request, 'accounts/family_registration.html', context={
                 'form': form,
                 'invitation':invitation,
+                'password_rules': password_rules,
             })
         
     else:
         form = FamilyRegistForm()
-            
+    
+    # パスワードのルール表示
+    password_rules = [
+        'あなたの他の個人情報と似ているパスワードにはできません。',
+        'パスワードは最低 8 文字以上必要です。',
+        '使える文字は半角英数になります。',
+        '英大文字・小文字・数字を必ず含んでください。'
+    ]
+    
     return render(request, 'accounts/family_registration.html', context={
         'form': form,
         'invitation':invitation,
+        'password_rules': password_rules,
     })
