@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Invitation
+from .models import User, Family, Invitation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
@@ -23,6 +23,17 @@ class RegistForm(UserCreationForm):
             'password2':'パスワード(再入力)',
         }
 
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            # ユーザーが作成されるときに家族が未設定であれば新しい家族を作成して設定
+            if not user.family_id:
+                family = Family.objects.create()  # 新しい家族を作成
+                user.family_id = family  # ユーザーに家族を関連付け
+            user.save()  # ユーザーを保存して家族情報を関連付け
+        return user
+    
 # ログインフォーム
 class UserLoginForm(forms.Form):
     email = forms.EmailField(label='メールアドレス')

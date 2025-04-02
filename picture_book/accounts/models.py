@@ -128,11 +128,3 @@ class Invitation(models.Model):
     def __str__(self):
         return f"招待トークン {self.invite_token} - {self.get_used_display()}"
 
-# FamilyMemberモデル
-
-class FamilyMember(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    family = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
-    
-    def __str__(self):
-        return f' FamilyMember of {self.user.username}'
