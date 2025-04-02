@@ -1,8 +1,10 @@
 from django import forms
-from .models import User, Invitation
+from .models import User, Family, Invitation
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, MinLengthValidator
+import re
 
 # 新規アカウント登録
 class RegistForm(UserCreationForm):
@@ -21,6 +23,17 @@ class RegistForm(UserCreationForm):
             'password2':'パスワード(再入力)',
         }
 
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            # ユーザーが作成されるときに家族が未設定であれば新しい家族を作成して設定
+            if not user.family_id:
+                family = Family.objects.create()  # 新しい家族を作成
+                user.family_id = family  # ユーザーに家族を関連付け
+            user.save()  # ユーザーを保存して家族情報を関連付け
+        return user
+    
 # ログインフォーム
 class UserLoginForm(forms.Form):
     email = forms.EmailField(label='メールアドレス')
@@ -68,6 +81,24 @@ class NewSetPasswordForm(forms.Form):
         self.user = kwargs.pop('user', None)  # userを受け取れるように__init__を追加
         super().__init__(*args, **kwargs)
 
+    # バリデーション
+    def clean_password1(self):
+        password = self.cleaned_data.get('password1')
+        if len(password) < 8:
+            raise ValidationError('パスワードは最低8文字以上必要です。')
+        if not re.search(r'[A-Za-z]', password):
+            raise ValidationError('パスワードには英大文字・小文字を含めてください。')
+        if not re.search(r'[0-9]', password):
+            raise ValidationError('パスワードには数字を含めてください。')
+        if self.user:
+            if self.user.username in password or self.user.email.split('@')[0] in password:
+                raise ValidationError('あなたの名前やメールアドレスを含むパスワードは使用できません。')
+        if not re.match(r'^[A-Za-z0-9]+$', password):
+            raise ValidationError('使える文字は半角英数字のみです。')
+
+        return password
+
+
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get('password1')
@@ -90,7 +121,15 @@ class InvitationForm(forms.ModelForm):
 
 # 家族アカウント登録フォーム
 class FamilyRegistForm(forms.ModelForm):
-    password1 = forms.CharField(label='パスワード', widget=forms.PasswordInput())
+    password1 = forms.CharField(
+        label='パスワード',
+        widget=forms.PasswordInput(),
+        validators=[
+            MinLengthValidator(8, 'パスワードは最低 8 文字以上必要です。'),
+            RegexValidator(r'^[A-Za-z0-9]+$', '使える文字は半角英数になります。'),
+            RegexValidator(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)', '英大文字・小文字・数字を必ず含んでください。')
+        ]
+    )
     password2 = forms.CharField(label='パスワード(再入力)', widget=forms.PasswordInput())
     
     class Meta:
@@ -106,7 +145,16 @@ class FamilyRegistForm(forms.ModelForm):
             'password1': 'パスワード',
             'password2': 'パスワード（再入力）',
         }
-        
+    
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+        if password1:
+            if password1.lower() in self.cleaned_data.get('username', '').lower():
+                raise ValidationError('あなたの他の個人情報と似ているパスワードにはできません。')
+            if password1.lower() in self.cleaned_data.get('email', '').lower():
+                raise ValidationError('あなたの他の個人情報と似ているパスワードにはできません。')
+        return password1
+    
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get('password1')

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>家族一覧</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">名前／ニックネーム</th>
+                <th scope="col">編集</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th> <!-- 行番号を表示 -->
+                    <td>{{ member.user.username }}</td> <!-- メンバーの名前 -->
+                    <td><a href="{% url 'family_edit' member.id %}">編集</a></td> <!-- 編集リンク -->
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">家族メンバーがいません。</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -20,6 +20,12 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username,**extra_fields)
         user.set_password(password)
+        
+        # 家族が設定されていない場合、新しい家族を作成してユーザーに設定
+        if not user.family_id:
+            family = Family.objects.create()
+            user.family_id = family
+        
         user.save()
         return user
     
@@ -27,12 +33,20 @@ class UserManager(BaseUserManager):
         extra_fields['is_staff'] = True
         extra_fields['is_active'] = True
         extra_fields['is_superuser'] = True
-        return self.create_user(email, username, password, **extra_fields)
+        user = self.create_user(email, username, password, **extra_fields)
+        
+         # スーパーユーザーに対しても家族を設定
+        if not user.family_id:
+            family = Family.objects.create()
+            user.family_id = family
+            user.save()
+        return user
+    
     
 
 # ユーザーモデル
 class User(AbstractBaseUser, PermissionsMixin):
-    family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
+    family_id = models.ForeignKey('Family', on_delete=models.CASCADE, null=False, blank=False)
     username = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
@@ -77,8 +91,8 @@ class Family(models.Model):
 
 # 家族招待モデル
 class Invitation(models.Model):
-    family_id = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True, related_name='family_invitations')
-    user_id = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='user_invitations')
+    family_id = models.ForeignKey('Family', on_delete=models.CASCADE, related_name='family_invitations', default=1)
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE, related_name='user_invitations', default=1)
     invite_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     
     def get_expiry_data():
@@ -114,11 +128,3 @@ class Invitation(models.Model):
     def __str__(self):
         return f"招待トークン {self.invite_token} - {self.get_used_display()}"
 
-# familyMemberモデル
-
-class familyMember(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    family = models.ForeignKey('Family', on_delete=models.SET_NULL, null=True, blank=True)
-    
-    def __str__(self):
-        return f' FamilyMember of {self.user.username}'

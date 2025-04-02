@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
-    InvitationForm,
+    InvitationForm, FamilyRegistForm,
     )
-from .models import PasswordResetToken
+from .models import PasswordResetToken, Invitation
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -213,3 +213,63 @@ def create_invitation(request):
         'form':form,
         'invitation_url':invitation_url,
     })
+
+
+# URLクリック→家族アカウント作成
+def accept_invitation(request, invite_token):
+    invitation = get_object_or_404(Invitation, invite_token=invite_token)
+    
+    # パスワードのルール表示
+    password_rules = [
+        'あなたの他の個人情報と似ているパスワードにはできません。',
+        'パスワードは最低 8 文字以上必要です。',
+        '使える文字は半角英数になります。',
+        '英大文字・小文字・数字を必ず含んでください。'
+    ]
+    
+    if request.method == 'POST':
+        form = FamilyRegistForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data['password1']
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            
+            # 家族情報関連付け
+            family = invitation.family_id
+            user.family_id = family
+            user.save()
+            
+            # 招待を使用済みにする
+            invitation.set_used()
+            return redirect('picture_book_app:home')
+        
+        # アカウント登録が上手くいかなかったとき
+        else:
+            return render(request, 'accounts/family_registration.html', context={
+                'form': form,
+                'invitation':invitation,
+                'password_rules': password_rules,
+            })
+        
+    else:
+        form = FamilyRegistForm()
+    
+    return render(request, 'accounts/family_registration.html', context={
+        'form': form,
+        'invitation':invitation,
+        'password_rules': password_rules,
+    })
+    
+    
+# 家族一覧画面
+def family_list(request):
+    
+    family = request.user.family_id
+    menbers = User.objects.filter(family=family)
+    
+    return render(request, 'accounts/family_list.html', context={
+        'menbers': menbers
+    })
+

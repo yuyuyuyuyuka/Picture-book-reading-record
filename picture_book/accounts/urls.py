@@ -12,4 +12,6 @@ urlpatterns = [
     path('password_reset_confirm/<uidb64>/<token>/', views.password_reset_confirm, name='password_reset_confirm'),
     path('password_reset_complete/',views.password_reset_complete, name='password_reset_complete'),
     path('create_invitation/',views.create_invitation, name='create_invitation'),
+    path('accept_invitation/<uuid:invite_token>/',views.accept_invitation, name='accept_invitation'),
+    path('family_list/',views.family_list, name='family_list'),
 ]
