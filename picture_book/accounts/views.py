@@ -3,7 +3,7 @@ from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
     InvitationForm, FamilyRegistForm,
     )
-from .models import PasswordResetToken, Invitation, FamilyMember
+from .models import PasswordResetToken, Invitation
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -238,7 +238,8 @@ def accept_invitation(request, invite_token):
             
             # 家族情報関連付け
             family = invitation.family_id
-            family_member = FamilyMember.objects.create(user=user, family=family)
+            user.family_id = family
+            user.save()
             
             # 招待を使用済みにする
             invitation.set_used()
@@ -266,7 +267,7 @@ def accept_invitation(request, invite_token):
 def family_list(request):
     
     family = request.user.family_id
-    menbers = FamilyMember.objects.filter(family=family)
+    menbers = User.objects.filter(family=family)
     
     return render(request, 'accounts/family_list.html', context={
         'menbers': menbers
