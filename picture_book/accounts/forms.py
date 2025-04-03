@@ -111,8 +111,6 @@ class NewSetPasswordForm(forms.Form):
             raise ValidationError('パスワードを設定してください')
         return cleaned_data
     
-        
-
 # 家族アカウント登録フォーム
 class FamilyRegistForm(forms.ModelForm):
     password1 = forms.CharField(

@@ -23,7 +23,10 @@ class UserManager(BaseUserManager):
         
         # 家族が設定されていない場合、新しい家族を作成してユーザーに設定
         if not user.family_id:
-            family = Family.objects.create()
+            family = Family.objects.first()
+            if not family:
+                # もしFamilyがなければ新規作成
+                family = Family.objects.create(name="Default Family")
             user.family_id = family
         
         user.save()
@@ -37,7 +40,10 @@ class UserManager(BaseUserManager):
         
          # スーパーユーザーに対しても家族を設定
         if not user.family_id:
-            family = Family.objects.create()
+            family = Family.objects.first()
+            if not family:
+                # もしFamilyがなければ新規作成
+                family = Family.objects.create(name="Default Family")
             user.family_id = family
             user.save()
         return user

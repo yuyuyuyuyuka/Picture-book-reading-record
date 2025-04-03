@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
-    InvitationForm, FamilyRegistForm,
+    FamilyRegistForm,
     )
 from .models import PasswordResetToken, Invitation, Family
 from django.contrib.auth import authenticate, login, logout
@@ -20,6 +20,8 @@ from django.core.exceptions import ValidationError
 import logging
 from django.utils import timezone
 from datetime import timedelta
+from django.http import HttpResponse
+
 
 # アカウント作成
 def regist(request):
@@ -198,12 +200,24 @@ def password_reset_complete(request):
 # 家族招待URL画面の招待URLを作成
 def create_invitation(request):
     invitation_url = ''
+    family = None
     
     if request.method == 'POST':
         
+        print(request.POST)  # request.POSTに含まれている全てのデータを表示
+        
         # フォームから家族idを取得
         family_id = request.POST.get('family_id')
-        family = Family.objects.get(id=family_id)
+        print(f"Received family_id: {family_id}")
+        if not family_id:
+            return HttpResponse("Family ID is missing or invalid.")
+        try:
+            family = Family.objects.get(id=request.user.family_id)
+            print(f"family.id: {family.id}") 
+            
+        except Family.DoesNotExist:
+            return HttpResponse("Family not found")
+        
         # 招待を送るユーザー（現在のログインユーザー）
         user = request.user
         
@@ -220,6 +234,7 @@ def create_invitation(request):
     
     return render(request, 'accounts/create_invitation.html', context={
         'invitation_url':invitation_url,
+        'family': family,
     })
 
 
@@ -273,8 +288,11 @@ def accept_invitation(request, invite_token):
         'invitation':invitation,
         'password_rules': password_rules,
     })
-    
-    
+
+# 招待が無効だった時
+def invalid_invitation(request):
+    return render(request, 'accounts/invalid_invitation.html')
+  
 # 家族一覧画面
 def family_list(request):
     

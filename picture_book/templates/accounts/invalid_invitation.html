@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>無効な招待リンク</h1>
+    <p>この招待リンクは無効です。期限が切れているか、すでに使用された可能性があります。</p>
+    <p>別のリンクを使用するか、再度招待を依頼してください。</p>
+    <p><a href="{% url 'accounts:accept_invitation' %}">家族アカウント登録画面に戻る</a></p>
+</div>
+{% endblock %}
