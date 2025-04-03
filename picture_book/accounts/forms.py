@@ -28,7 +28,7 @@ class RegistForm(UserCreationForm):
         user = super().save(commit=False)
         if commit:
             # ユーザーが作成されるときに家族が未設定であれば新しい家族を作成して設定
-            if not user.family_id:
+            if not user.family_id_id:
                 family = Family.objects.create()  # 新しい家族を作成
                 user.family_id = family  # ユーザーに家族を関連付け
             user.save()  # ユーザーを保存して家族情報を関連付け
