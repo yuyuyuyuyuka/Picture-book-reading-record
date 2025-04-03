@@ -227,6 +227,10 @@ def create_invitation(request):
 def accept_invitation(request, invite_token):
     invitation = get_object_or_404(Invitation, invite_token=invite_token)
     
+    # 招待が無効だった時
+    if not invitation.is_valid():
+        return redirect('accountu:invalid_invitation')
+    
     # パスワードのルール表示
     password_rules = [
         'あなたの他の個人情報と似ているパスワードにはできません。',
@@ -238,6 +242,7 @@ def accept_invitation(request, invite_token):
     if request.method == 'POST':
         form = FamilyRegistForm(request.POST)
         if form.is_valid():
+            # ユーザー作成
             user = form.save(commit=False)
             password = form.cleaned_data['password1']
             user.set_password(password)
@@ -245,8 +250,7 @@ def accept_invitation(request, invite_token):
             user.save()
             
             # 家族情報関連付け
-            family = invitation.family_id
-            user.family_id = family
+            user.family_id = invitation.family_id
             user.save()
             
             # 招待を使用済みにする
