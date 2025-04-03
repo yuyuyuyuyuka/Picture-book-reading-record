@@ -111,12 +111,6 @@ class NewSetPasswordForm(forms.Form):
             raise ValidationError('パスワードを設定してください')
         return cleaned_data
     
-
-# 家族招待URL作成画面
-class InvitationForm(forms.ModelForm):
-    class Meta:
-        model = Invitation
-        fields = ['family_id', 'user_id']
         
 
 # 家族アカウント登録フォーム

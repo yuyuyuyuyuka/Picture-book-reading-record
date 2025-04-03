@@ -4,7 +4,6 @@
     <h1>家族招待</h1>
     <form method="POST">
         {% csrf_token %}
-        {{ user_form.as_p }}
         <button type="submit">家族招待URLを作成する</button>
     </form>
     {% if invitation_url %}

@@ -3,7 +3,7 @@ from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
     InvitationForm, FamilyRegistForm,
     )
-from .models import PasswordResetToken, Invitation
+from .models import PasswordResetToken, Invitation, Family
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -200,17 +200,25 @@ def create_invitation(request):
     invitation_url = ''
     
     if request.method == 'POST':
-        form = InvitationForm(request.POST)
-        if form.is_valid():
-            invitation = form.save()
-            invite_url = reverse('accounts:accept_invitation', kwargs={'invite_token':invitation.invite_token})
-            invitation_url = request.build_absolute_uri(invite_url)
-    
-    else:
-        form = InvitationForm()
         
+        # フォームから家族idを取得
+        family_id = request.POST.get('family_id')
+        family = Family.objects.get(id=family_id)
+        # 招待を送るユーザー（現在のログインユーザー）
+        user = request.user
+        
+        # 新しいトークン作成
+        invitation = Invitation.objects.create(
+            family_id = family,
+            user_id = user,
+            invite_token = uuid.uuid4()
+        )
+        # 招待URL作成
+        invite_url = reverse('accounts:accept_invitation', kwargs={'invite_token':invitation.invite_token})
+        invitation_url = request.build_absolute_uri(invite_url)
+        
+    
     return render(request, 'accounts/create_invitation.html', context={
-        'form':form,
         'invitation_url':invitation_url,
     })
 
