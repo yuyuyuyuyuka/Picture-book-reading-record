@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
-    FamilyRegistForm,
+    FamilyRegistForm, UserUpdateForm,
     )
 from .models import PasswordResetToken, Invitation, Family
 from django.contrib.auth import authenticate, login, logout
@@ -297,9 +297,22 @@ def invalid_invitation(request):
 def family_list(request):
     
     family = request.user.family_id
-    menbers = User.objects.filter(family=family)
+    members = User.objects.filter(family=family)
     
     return render(request, 'accounts/family_list.html', context={
-        'menbers': menbers
+        'members': members
     })
 
+
+# アカウント情報変更（名前・メールアドレス）
+def profile_update(request):
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('picture_book_app:home') #あとでマイページを作って記入
+    else:
+        form = UserUpdateForm()
+    return render (request, 'accounts/profile_update.html', context={
+        'form': form,
+    })
