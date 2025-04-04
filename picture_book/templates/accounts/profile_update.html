@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>アカウント情報変更</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="登録">
+        {% comment %} <a href="{% url 'accounts:password_change' %}">
+            <button type="button">パスワードを変更する</button>
+        </a> {% endcomment %}
+        <a href="{% url 'picture_book_app:home' %}"> {% comment %}あとでマイページへ遷移{% endcomment %}
+            <button type="button">キャンセル</button>
+        </a>
+    </form>
+</div>
+{% endblock %}

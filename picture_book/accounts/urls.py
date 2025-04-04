@@ -15,4 +15,5 @@ urlpatterns = [
     path('accept_invitation/<uuid:invite_token>/',views.accept_invitation, name='accept_invitation'),
     path('invalid_invitation/', views.invalid_invitation, name='invalid_invitation'),
     path('family_list/',views.family_list, name='family_list'),
+    path('profile_update/', views.profile_update, name='profile_update'),
 ]
