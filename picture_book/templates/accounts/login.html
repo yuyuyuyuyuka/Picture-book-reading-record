@@ -1,17 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="centered-container">
     <h1>お話の足跡</h1>
     <form method="POST">
         {% csrf_token %}
-        {{ login_form.as_p }}
+        <div class="form-group">
+            {{ login_form.email.label_tag }}
+            {{ login_form.email }}
+        </div>
+
+        <div class="form-group">
+            {{ login_form.password.label_tag }}
+            {{ login_form.password }}
+        </div>
         <input type="submit" value="ログイン">
     </form>
 
-    <p><a href="{% url 'accounts:request_password_reset' %}">※パスワードを忘れた方はこちら</a></p>
+    <p>
+        <a href="{% url 'accounts:request_password_reset' %}" style="color: #555555;">
+          ※パスワードを忘れた方はこちら
+        </a>
+      </p>
+
+    
 
 
-    <h3>初めてご利用の方は</h3>
-    <a href="{% url 'accounts:regist' %}"><span style="color:red">アカウント登録</span></a>
+    <h6>初めてご利用の方は</h6>
+        <a href="{% url 'accounts:regist' %}" style="color: #555555;">
+          アカウント登録
+        </a>
+    </p>
 </div>
 {% endblock %}
