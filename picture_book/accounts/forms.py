@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MinLengthValidator
 import re
+from django.contrib.auth import get_user_model
 
 # 新規アカウント登録
 class RegistForm(UserCreationForm):
@@ -158,3 +159,21 @@ class FamilyRegistForm(forms.ModelForm):
         else:
             raise ValidationError('パスワードを設定してください')
         return cleaned_data
+
+
+User = get_user_model()
+# アカウント情報変更（名前・メールアドレス）
+class UserUpdateForm(forms.ModelForm):
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+        labels = {
+            'username': '名前／ニックネーム',
+            'email': 'メールアドレス',
+        }
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError(' このメールアドレスはすでに使われています')
+        return email
