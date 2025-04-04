@@ -200,28 +200,11 @@ def password_reset_complete(request):
 # 家族招待URL画面の招待URLを作成
 def create_invitation(request):
     invitation_url = ''
-    family = None
     
     if request.method == 'POST':
-        
-        print(request.POST)  # request.POSTに含まれている全てのデータを表示
-        
-        # フォームから家族idを取得
-        family_id = request.POST.get('family_id')
-        print(f"Received family_id: {family_id}")
-        if not family_id:
-            return HttpResponse("Family ID is missing or invalid.")
-        try:
-            family = Family.objects.get(id=request.user.family_id)
-            print(f"family.id: {family.id}") 
-            
-        except Family.DoesNotExist:
-            return HttpResponse("Family not found")
-        
-        # 招待を送るユーザー（現在のログインユーザー）
         user = request.user
-        
-        # 新しいトークン作成
+        family = user.family_id
+
         invitation = Invitation.objects.create(
             family_id = family,
             user_id = user,
@@ -234,7 +217,6 @@ def create_invitation(request):
     
     return render(request, 'accounts/create_invitation.html', context={
         'invitation_url':invitation_url,
-        'family': family,
     })
 
 
@@ -244,7 +226,7 @@ def accept_invitation(request, invite_token):
     
     # 招待が無効だった時
     if not invitation.is_valid():
-        return redirect('accountu:invalid_invitation')
+        return redirect('accounts:invalid_invitation')
     
     # パスワードのルール表示
     password_rules = [
@@ -255,18 +237,13 @@ def accept_invitation(request, invite_token):
     ]
     
     if request.method == 'POST':
-        form = FamilyRegistForm(request.POST)
+        form = FamilyRegistForm(request.POST, family=invitation.family_id)
         if form.is_valid():
             # ユーザー作成
-            user = form.save(commit=False)
-            password = form.cleaned_data['password1']
-            user.set_password(password)
+            user = form.save(commit=True)
             user.is_active = True
             user.save()
-            
-            # 家族情報関連付け
-            user.family_id = invitation.family_id
-            user.save()
+
             
             # 招待を使用済みにする
             invitation.set_used()

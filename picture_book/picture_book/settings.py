@@ -140,6 +140,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # 1時間
 PASSWORD_RESET_TIMEOUT = 3600
 
+LOGIN_URL = '/accounts/login/'
 
 LOGGING = {
     'version': 1,

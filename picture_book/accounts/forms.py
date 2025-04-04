@@ -125,6 +125,10 @@ class FamilyRegistForm(forms.ModelForm):
     )
     password2 = forms.CharField(label='パスワード(再入力)', widget=forms.PasswordInput())
     
+    def __init__(self, *args, **kwargs):
+        self.family = kwargs.pop('family', None)  # 外から family を受け取る
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
@@ -159,7 +163,19 @@ class FamilyRegistForm(forms.ModelForm):
         else:
             raise ValidationError('パスワードを設定してください')
         return cleaned_data
-
+    
+    # 家族IDを設定
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if self.family:
+            user.family_id = self.family
+        else:
+            from .models import Family
+            user.family_id = Family.objects.create()
+        user.set_password(self.cleaned_data['password1'])
+        if commit:
+            user.save()
+        return user
 
 User = get_user_model()
 # アカウント情報変更（名前・メールアドレス）
