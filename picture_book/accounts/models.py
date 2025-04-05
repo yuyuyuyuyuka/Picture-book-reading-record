@@ -18,35 +18,34 @@ class UserManager(BaseUserManager):
         if not password:
             raise ValueError('パスワードを入力してください')
         email = self.normalize_email(email)
-        user = self.model(email=email, username=username,**extra_fields)
-        user.set_password(password)
-        
-        # 家族が設定されていない場合、新しい家族を作成してユーザーに設定
-        if not user.family_id:
+
+        # family_id を事前に設定
+        family = extra_fields.pop('family_id', None)
+        if not family:
             family = Family.objects.first()
             if not family:
-                # もしFamilyがなければ新規作成
-                family = Family.objects.create(name="Default Family")
-            user.family_id = family
-        
+                family = Family.objects.create()
+
+        # family_id を含めて User インスタンスを作成
+        user = self.model(email=email, username=username, family_id=family, **extra_fields)
+        user.set_password(password)
         user.save()
         return user
     
     def create_superuser(self, email, username, password=None, **extra_fields):
-        extra_fields['is_staff'] = True
-        extra_fields['is_active'] = True
-        extra_fields['is_superuser'] = True
-        user = self.create_user(email, username, password, **extra_fields)
-        
-         # スーパーユーザーに対しても家族を設定
-        if not user.family_id:
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        # family_id を設定
+        family = extra_fields.pop('family_id', None)
+        if not family:
             family = Family.objects.first()
             if not family:
-                # もしFamilyがなければ新規作成
-                family = Family.objects.create(name="Default Family")
-            user.family_id = family
-            user.save()
-        return user
+                family = Family.objects.create()
+        extra_fields['family_id'] = family
+
+        return self.create_user(email, username, password, **extra_fields)
     
     
 
