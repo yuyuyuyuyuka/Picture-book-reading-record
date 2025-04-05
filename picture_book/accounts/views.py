@@ -197,6 +197,12 @@ def password_reset_complete(request):
     return render(request, 'accounts/password_reset_complete.html')
 
 
+# マイページ
+@login_required
+def mypage(request):
+    return render(request, 'accounts/mypage.html')
+
+
 # 家族招待URL画面の招待URLを作成
 def create_invitation(request):
     invitation_url = ''
@@ -287,7 +293,7 @@ def profile_update(request):
         form = UserUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('picture_book_app:home') #あとでマイページを作って記入
+            return redirect('accounts:mypage') 
     else:
         form = UserUpdateForm()
     return render (request, 'accounts/profile_update.html', context={
