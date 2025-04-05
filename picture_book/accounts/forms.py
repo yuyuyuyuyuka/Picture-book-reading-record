@@ -1,11 +1,12 @@
 from django import forms
-from .models import User, Family, Invitation
+from .models import User, Family
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MinLengthValidator
 import re
 from django.contrib.auth import get_user_model
+from django.contrib.auth import password_validation
 
 # 新規アカウント登録
 class RegistForm(UserCreationForm):
@@ -193,3 +194,42 @@ class UserUpdateForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError(' このメールアドレスはすでに使われています')
         return email
+    
+# アカウント情報変更（パスワード）
+class UserPasswordChangeForm(forms.Form):
+    old_password = forms.CharField(
+        label='元のパスワード',
+        widget=forms.PasswordInput()
+    )
+    new_password1 = forms.CharField(
+        label='新しいパスワード',
+        widget=forms.PasswordInput(),
+        help_text=password_validation.password_validators_help_text_html()
+    )
+    new_password2 = forms.CharField(
+        label='新しいパスワード(再入力)',
+        widget=forms.PasswordInput(),
+    )
+    
+    # 現在のパスワードが正しいかどうかを検証する
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+    
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get('old_password')
+        if not self.user.check_password(old_password):
+            raise forms.ValidationError('元のパスワードが正しくありません')
+        return old_password
+    
+    # フォーム全体のバリデーション
+    def clean(self):
+        cleaned_data = super().clean
+        new1 = cleaned_data('new_password1')
+        new2 = cleaned_data('new_password2')
+        
+        if new1 and new2:
+            if new1 != new2:
+                raise forms.ValidationError('新しいパスワードが一致しません')
+        password_validation.validate_password(new1, self.user)
+        return cleaned_data

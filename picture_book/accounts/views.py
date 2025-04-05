@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
-    FamilyRegistForm, UserUpdateForm,
+    FamilyRegistForm, UserUpdateForm,UserPasswordChangeForm,
     )
 from .models import PasswordResetToken, Invitation, Family
 from django.contrib.auth import authenticate, login, logout
@@ -20,7 +20,7 @@ from django.core.exceptions import ValidationError
 import logging
 from django.utils import timezone
 from datetime import timedelta
-from django.http import HttpResponse
+from django.contrib.auth import update_session_auth_hash
 
 
 # アカウント作成
@@ -298,4 +298,23 @@ def profile_update(request):
         form = UserUpdateForm()
     return render (request, 'accounts/profile_update.html', context={
         'form': form,
+    })
+
+# アカウント情報の変更（パスワード）
+def password_change(request):
+    if request.method == 'POST':
+        form = UserPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            new_password = form.cleaned_data['new_password1']
+            request.user.set_password(new_password)
+            request.user.save()
+            
+            # パスワード変更後もログイン状態を維持
+            update_session_auth_hash(request, request.user)
+            return redirect('accounts:mypage')
+            
+    else:
+        form = UserPasswordChangeForm(user=request.user)
+    return render(request, 'accounts/password_change.html', context={
+        'form':form
     })
