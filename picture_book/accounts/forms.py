@@ -224,12 +224,13 @@ class UserPasswordChangeForm(forms.Form):
     
     # フォーム全体のバリデーション
     def clean(self):
-        cleaned_data = super().clean
-        new1 = cleaned_data('new_password1')
-        new2 = cleaned_data('new_password2')
+        cleaned_data = super().clean()
+        new_password1 = cleaned_data.get('new_password1')
+        new_password2 = cleaned_data.get('new_password2')
         
-        if new1 and new2:
-            if new1 != new2:
+        if new_password1 and new_password2:
+            if new_password1 != new_password2:
                 raise forms.ValidationError('新しいパスワードが一致しません')
-        password_validation.validate_password(new1, self.user)
+            
+        password_validation.validate_password(new_password1, self.user)
         return cleaned_data
