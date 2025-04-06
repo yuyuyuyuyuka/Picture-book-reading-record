@@ -22,9 +22,12 @@ class UserManager(BaseUserManager):
         # family_id を事前に設定
         family = extra_fields.pop('family_id', None)
         if not family:
-            family = Family.objects.first()
+            # family_id が指定されていない場合、招待されたユーザーの family_id を設定
+            family = extra_fields.get('family_id')
             if not family:
-                family = Family.objects.create()
+                family = Family.objects.first()
+                if not family:
+                    family = Family.objects.create()
 
         # family_id を含めて User インスタンスを作成
         user = self.model(email=email, username=username, family_id=family, **extra_fields)

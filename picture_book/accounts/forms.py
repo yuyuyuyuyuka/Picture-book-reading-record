@@ -172,7 +172,7 @@ class FamilyRegistForm(forms.ModelForm):
             user.family_id = self.family
         else:
             from .models import Family
-            user.family_id = Family.objects.create()
+            user.family_id = Family.objects.first()
         user.set_password(self.cleaned_data['password1'])
         if commit:
             user.save()

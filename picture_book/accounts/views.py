@@ -276,16 +276,6 @@ def accept_invitation(request, invite_token):
 def invalid_invitation(request):
     return render(request, 'accounts/invalid_invitation.html')
   
-# 家族一覧画面
-def family_list(request):
-    
-    family = request.user.family_id
-    members = User.objects.filter(family=family)
-    
-    return render(request, 'accounts/family_list.html', context={
-        'members': members
-    })
-
 
 # アカウント情報変更（名前・メールアドレス）
 def profile_update(request):
@@ -317,4 +307,18 @@ def password_change(request):
         form = UserPasswordChangeForm(user=request.user)
     return render(request, 'accounts/password_change.html', context={
         'form':form
+    })
+    
+User = get_user_model()
+# 家族一覧画面
+@login_required
+def family_list(request):
+    
+    family = request.user.family_id
+    print("Family ID:", family.id)
+    members = User.objects.filter(family_id=family)
+    print("Members:", members)
+    
+    return render(request, 'accounts/family_list.html', context={
+        'members': members
     })

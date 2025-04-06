@@ -8,6 +8,7 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col">名前／ニックネーム</th>
+                <th scope="col">家族ID</th>
                 <th scope="col">編集</th>
             </tr>
         </thead>
@@ -15,8 +16,9 @@
             {% for member in members %}
                 <tr>
                     <th scope="row">{{ forloop.counter }}</th> <!-- 行番号を表示 -->
-                    <td>{{ member.user.username }}</td> <!-- メンバーの名前 -->
-                    <td><a href="{% url 'family_edit' member.id %}">編集</a></td> <!-- 編集リンク -->
+                    <td>{{ member.username }}</td> <!-- メンバーの名前 -->
+                    <td>{{ member.family_id.id }}</td>  <!-- family_id を表示 -->
+                    {% comment %} <td><a href="{% url 'family_edit' member.id %}">編集</a></td> <!-- 編集リンク --> {% endcomment %}
                 </tr>
             {% empty %}
                 <tr>
