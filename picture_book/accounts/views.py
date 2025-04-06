@@ -314,9 +314,9 @@ User = get_user_model()
 @login_required
 def family_list(request):
     
-    family = request.user.family_id
-    print("Family ID:", family.id)
-    members = User.objects.filter(family_id=family)
+    family_id = request.user.family_id_id #
+    print("Family ID:", family_id)
+    members = User.objects.filter(family_id=family_id)
     print("Members:", members)
     
     return render(request, 'accounts/family_list.html', context={
