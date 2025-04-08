@@ -176,6 +176,8 @@ class FamilyRegistForm(forms.ModelForm):
         user.set_password(self.cleaned_data['password1'])
         if commit:
             user.save()
+            user.family_id = self.family
+            user.save(update_fields=['family_id'])
         return user
 
 User = get_user_model()
