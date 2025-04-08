@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>家族編集・削除</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="登録">
+        <a href="{% url 'accounts:family_list' %}">
+            <button type="button">削除</button>
+        </a>
+    </form>
+</div>
+{% endblock %}

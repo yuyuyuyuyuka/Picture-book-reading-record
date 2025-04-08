@@ -322,3 +322,22 @@ def family_list(request):
     return render(request, 'accounts/family_list.html', context={
         'members': members
     })
+    
+
+# 家族編集画面
+@login_required
+def family_update(request, pk):
+    member = get_object_or_404(User, pk=pk)  #このUserは家族のことを指す
+    
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=member)  #記入フォームが同じなのでUserUpdateForm使える
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:family_list')
+        
+    else:
+        form = UserUpdateForm(instance=member)
+        return render(request, 'accounts/family_update.html', context={
+            'form': form,
+            'member':member,
+        })
