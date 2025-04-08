@@ -325,7 +325,7 @@ def family_list(request):
     
 
 # 家族編集画面
-@login_required
+
 def family_update(request, pk):
     member = get_object_or_404(User, pk=pk)  #このUserは家族のことを指す
     
@@ -341,3 +341,15 @@ def family_update(request, pk):
             'form': form,
             'member':member,
         })
+        
+# 家族削除
+
+def family_delete(request, pk):
+    member = get_object_or_404(User, pk=pk)
+    
+    if request.method == 'POST':
+        member.delete()
+        return redirect('accounts:family_list')
+    return render(request, 'accounts/family_update.html', context={
+        'member':member,
+    })

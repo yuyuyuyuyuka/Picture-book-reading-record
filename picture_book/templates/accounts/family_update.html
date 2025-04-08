@@ -1,14 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h1>家族編集・削除</h1>
-    <form method="POST">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>家族編集・削除</h1>
+    </div>
+
+<!-- 家族一覧へ戻るリンク -->
+<a href="{% url 'accounts:family_list' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
+
+<!-- 編集ボタン -->
+    <form method="POST" style="display: inline-block;">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="登録">
-        <a href="{% url 'accounts:family_list' %}">
-            <button type="button">削除</button>
-        </a>
+        <input type="submit" value="保存" style="padding: 5px 15px;">
+
+
+    <!-- 削除ボタン -->
+    <form action="{% url 'accounts:family_delete' member.pk %}" method="POST" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('本当に削除しますか？');" style="padding: 5px 15px;">削除</button>
     </form>
 </div>
 {% endblock %}

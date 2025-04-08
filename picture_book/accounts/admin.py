@@ -5,7 +5,7 @@ from .models import PasswordResetToken, Family, Invitation
 User = get_user_model()
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'username', 'is_active', 'is_staff', 'created_at', 'update_at')
+    list_display = ('email', 'username', 'family_id', 'is_active', 'is_staff', 'created_at', 'update_at')
     search_fields = ('email', 'username')
     list_filter = ('is_active', 'is_staff')
     
