@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from .models import Child
-from .forms import ChildForm
+from .forms import ChildForm, BookForm
 
 class HomeView(TemplateView):
     template_name = 'picture_book_app/home.html'
@@ -60,4 +60,18 @@ def child_delete(request, pk):
     return render(request, 'picture_book_app/child_update.html', context={
         'child': child,
     })
+
+
+# 絵本新規登録画面
+def book_create(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('picture_book_app:book_list')
+    else:
+        form = BookForm()
     
+    return render(request, 'picture_book_app/book_create.html', {
+        'form': form,
+    })
