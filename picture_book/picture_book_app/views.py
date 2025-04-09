@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from .models import Child
 from .forms import ChildForm
@@ -15,11 +15,13 @@ def child_list(request):
     })
     
 # 子ども登録画面
-def child_regist(request):
+def child_create(request):
     if request.method == 'POST':
         form = ChildForm(request.POST)
         if form.is_valid():
-            form.save()
+            child = form.save(commit=False)  #一旦保存止める
+            child.family_id = request.user.family_id  #家族IDセット
+            child.save()
             return redirect ('picture_book_app:child_list')
         
     else:
@@ -27,3 +29,8 @@ def child_regist(request):
     return render(request, 'picture_book_app/child_registration.html', context={
         'form': form,
     })
+
+
+# 子ども編集
+def child_update(request, pk):
+    child = get_object_or_404()

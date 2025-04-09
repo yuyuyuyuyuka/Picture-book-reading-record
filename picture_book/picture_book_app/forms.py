@@ -13,5 +13,5 @@ class ChildForm(forms.ModelForm):
         }
         # 誕生日入力をカレンダー表示
         widgets = {
-            'birthday': forms.DateField(attrs={'type': 'date'}),
+            'birthday': forms.DateInput(attrs={'type': 'date'}),
         }

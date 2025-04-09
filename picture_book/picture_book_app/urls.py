@@ -8,4 +8,5 @@ app_name = 'picture_book_app'
 urlpatterns = [
     path('home/', HomeView.as_view(), name='home'),
     path('child_list/', views.child_list, name='child_list'),
+    path('child_create/', views.child_create, name='child_create'),
 ]
