@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>子ども編集</h1>
+    <a href="{% url 'picture_book_app:child_list' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.name.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.name.label }}：</label>
+            {{ form.name }}
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.birthday.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.birthday.label }}：</label>
+            {{ form.birthday }}
+        </div>
+        <div style="text-align: center;">
+        <input type="submit" value="保存">
+        </div>
+    </form>
+    <form action="{% url 'picture_book_app:child_delete' child.pk %}" method="POST" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('本当に削除しますか？');" style="padding: 5px 15px;">削除</button>
+    </form>
+</div>
+{% endblock %}

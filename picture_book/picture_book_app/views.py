@@ -33,4 +33,31 @@ def child_create(request):
 
 # 子ども編集
 def child_update(request, pk):
-    child = get_object_or_404()
+    child = get_object_or_404(Child, pk=pk, family_id=request.user.family_id)
+    
+    if request.method == 'POST':
+        form = ChildForm(request.POST, instance=child)
+        if form.is_valid():
+            form.save()
+            return redirect('picture_book_app:child_list')
+    
+    else:
+        form = ChildForm(instance=child)
+    return render(request, 'picture_book_app/child_update.html', context={
+        'form': form,
+        'child': child,
+    })
+
+
+# 子ども削除
+def child_delete(request, pk):
+    child = get_object_or_404(Child, pk=pk, family_id=request.user.family_id)
+    
+    if request.method == 'POST':
+        child.delete()
+        return redirect('picture_book_app:child_list')
+    
+    return render(request, 'picture_book_app/child_update.html', context={
+        'child': child,
+    })
+    
