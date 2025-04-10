@@ -1,6 +1,6 @@
 /* 全ページ共通で中央に表示するレイアウト */
 .container {
-  max-width: 500px;
+  max-width: 1200px; /* 幅を広げる */
   margin: 0 auto;
   padding: 2em;
   background-color: #fff;

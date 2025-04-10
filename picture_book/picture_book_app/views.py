@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from .models import Child, Book
 from .forms import ChildForm, BookForm
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 class HomeView(TemplateView):
     template_name = 'picture_book_app/home.html'
@@ -90,8 +91,14 @@ def book_list(request):
         )
     else:
         books = Book.objects.all()
+        
+    # ページネーション
+    paginator = Paginator(books, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     return render(request, 'picture_book_app/book_list.html', context={
-        'books': books,
+        'books': page_obj,
         'query': query,
     })
 
