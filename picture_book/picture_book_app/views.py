@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from .models import Child, Book
 from .forms import ChildForm, BookForm
+from django.db.models import Q
 
 class HomeView(TemplateView):
     template_name = 'picture_book_app/home.html'
@@ -79,9 +80,19 @@ def book_create(request):
 
 # 絵本一覧画面
 def book_list(request):
-    books = Book.objects.all()
+    # 検索機能
+    query = request.GET.get('q')
+    if query:
+        books = Book.objects.filter(
+            Q(title__icontains=query)|
+            Q(author__icontains=query)|
+            Q(publisher__icontains=query)
+        )
+    else:
+        books = Book.objects.all()
     return render(request, 'picture_book_app/book_list.html', context={
-        'books':books
+        'books': books,
+        'query': query,
     })
 
 

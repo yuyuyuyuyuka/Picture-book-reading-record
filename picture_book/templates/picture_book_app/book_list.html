@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h1>絵本一覧（本棚）</h1>
+    <h2>本棚（絵本一覧）</h2>
+
+    <form method="GET" action="{% url 'picture_book_app:book_list' %}" style="margin-bottom: 20px;">
+        <input type="text" name="q" placeholder="絵本を検索（タイトル・著者・出版社）" value="{{ query|default_if_none:'' }}">
+        <button type="submit">検索</button>
+    </form>
+    
 
     <div style="display: flex; flex-wrap: wrap; gap: 20px;">
         {% for book in books %}
@@ -14,8 +20,19 @@
             <h3>{{ book.title }}</h3>
             <p><strong>著者：</strong>{{ book.author }}</p>
             <p><strong>出版社：</strong>{{ book.publisher }}</p>
-        </div>
-        {% endfor %}
+        
+
+        <!-- 編集ボタン -->
+        <a href="{% url 'picture_book_app:book_update' book.pk %}">
+            <button style="margin: 5px;">編集／削除</button>
+        </a>
+  
+        <!-- 詳細ボタン（まだ作成予定でもOK）-->
+        <a href="#">
+            <button style="margin: 5px;">詳細</button>
+        </a>
     </div>
+    {% endfor %}
+    
 </div>
 {% endblock %}

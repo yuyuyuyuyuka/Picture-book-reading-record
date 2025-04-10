@@ -21,6 +21,14 @@
             <label for="{{ form.cover_image.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.cover_image.label }}：</label>
             {{ form.cover_image }}
         </div>
+
+        {% if book.cover_image %}
+            <div style="margin-bottom: 15px;">
+                <p>現在の表紙：</p>
+                <img src="{{ book.cover_image.url }}" alt="表紙画像" style="max-width: 200px; height: auto;">
+            </div>
+        {% endif %}
+
         <div style="text-align: center;">
         <input type="submit" value="保存">
         </div>
