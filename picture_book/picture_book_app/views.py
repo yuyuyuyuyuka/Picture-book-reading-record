@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import Child
+from .models import Child, Book
 from .forms import ChildForm, BookForm
 
 class HomeView(TemplateView):
@@ -75,3 +75,11 @@ def book_create(request):
     return render(request, 'picture_book_app/book_create.html', {
         'form': form,
     })
+
+
+# 絵本一覧画面
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, 'picture_book_app/book_list.html', context={
+        'books':books
+    }) 

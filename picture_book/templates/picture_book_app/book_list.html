@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>絵本一覧（本棚）</h1>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        {% for book in books %}
+        <div style="width: 200px; border: 1px solid #ccc; padding: 10px; border-radius: 10px;">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="width: 100%; height: auto; border-radius: 5px;">
+            {% else %}
+                <p>画像なし</p>
+            {% endif %}
+            <h3>{{ book.title }}</h3>
+            <p><strong>著者：</strong>{{ book.author }}</p>
+            <p><strong>出版社：</strong>{{ book.publisher }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
