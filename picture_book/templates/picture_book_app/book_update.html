@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h3>絵本編集・削除</h3>
+    <a href="{% url 'picture_book_app:book_list' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.title.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.title.label }}：</label>
+            {{ form.title }}
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.author.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.author.label }}：</label>
+            {{ form.author }}
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.publisher.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.publisher.label }}：</label>
+            {{ from.publisher }}
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.cover_image.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.cover_image.label }}：</label>
+            {{ form.cover_image }}
+        </div>
+        <div style="text-align: center;">
+        <input type="submit" value="保存">
+        </div>
+    </form>
+    <form action="{% url 'picture_book_app:book_delete' book.pk %}" method="POST" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('本当に削除しますか？');" style="padding: 5px 15px;">削除</button>
+        <a href="{% url 'picture_book_app:book_list' %}"><button type="button">キャンセル</button></a>
+    </form>
+</div>
+{% endblock %}

@@ -82,4 +82,31 @@ def book_list(request):
     books = Book.objects.all()
     return render(request, 'picture_book_app/book_list.html', context={
         'books':books
-    }) 
+    })
+
+
+# 絵本編集
+def book_update(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('picture_book_app:book_list')
+            
+    else:
+        
+        form = BookForm(instance=book)
+    return render(request, 'picture_book_app/book_update.html', context={
+        'form': form,
+        'book': book,
+    })
+
+# 絵本削除
+def book_delete(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    
+    if request.method == 'POST':
+        book.delete()
+        return redirect('picture_book_app:book_list')
