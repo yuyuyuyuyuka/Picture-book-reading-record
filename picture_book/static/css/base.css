@@ -4,6 +4,7 @@
   margin: 0 auto;
   padding: 2em;
   background-color: #fff;
+  margin-top: 80px; /* ナビゲーションバーの高さ分だけ余白を設定 */
 }
 
 /* 登録画面やその他：ラベル横＋フィールド */
@@ -38,12 +39,13 @@
 .centered-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* 上に寄せる */
   align-items: center;
-  height: 100vh;
   text-align: center;
+  width: 100%;
 }
 
+/* その他のフォーム要素のスタイル */
 .form-group {
   margin-bottom: 1em;
   text-align: center;

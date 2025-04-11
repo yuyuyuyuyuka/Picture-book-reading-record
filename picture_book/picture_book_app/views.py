@@ -128,3 +128,8 @@ def book_delete(request, pk):
     if request.method == 'POST':
         book.delete()
         return redirect('picture_book_app:book_list')
+
+
+# 絵本詳細画面
+def book_detail(request, pk):
+    
