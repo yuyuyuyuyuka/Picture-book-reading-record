@@ -22,7 +22,18 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
+
+
+#簡単記録モデル
+class ReadingComment(models.Model):
+    # 16項目ほど選択を作りたい
+    comment = models.CharField(max_length=225)
+    created_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return self.comment
+
 
 # 読み聞かせ記録モデル
 class ReadingRecord(models.Model):
@@ -48,13 +59,3 @@ class ReadingRecord(models.Model):
         return f"{self.child.name} - {self.book.title}({self.data})"
     
 
-
-#簡単記録モデル
-class ReadingComment(models.Model):
-    # 16項目ほど選択を作りたい
-    comment = models.CharField(max_length=225)
-    created_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.comment
