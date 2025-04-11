@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="centered-container">
+    <h1>絵本の詳細</h1>
+    <a href="{% url 'picture_book_app:book_list' %}" style="text-decoration: none; font-size: 1.2em;">← 本棚に戻る</a>
+
+    <div style="display: flex; margin-top: 20px; gap: 30px;">
+        <!-- 左側：表紙 -->
+        <div style="flex: 1;">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100%; height: auto; border-radius: 10px;">
+            {% else %}
+                <p>[画像なし]</p>
+            {% endif %}
+        </div>
+
+        <!-- 右側：本の情報 -->
+        <div style="flex: 2; margin-top: 60px;">
+            <p><strong>絵本のタイトル：</strong>{{ book.title }}</p>
+            <p><strong>著者：</strong><a href="{% url 'picture_book_app:book_list' %}?author={{ book.author }}">{{ book.author }}</a></p>
+            <p><strong>出版社：</strong><a href="{% url 'picture_book_app:book_list' %}?publisher={{ book.publisher }}">{{ book.publisher }}</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

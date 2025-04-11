@@ -81,14 +81,23 @@ def book_create(request):
 
 # 絵本一覧画面
 def book_list(request):
-    # 検索機能
     query = request.GET.get('q')
+    author = request.GET.get('author')
+    publisher = request.GET.get('publisher')
+    
+    # 検索機能
     if query:
         books = Book.objects.filter(
             Q(title__icontains=query)|
             Q(author__icontains=query)|
             Q(publisher__icontains=query)
         )
+    elif author:
+        books = Book.objects.filter(author=author)
+        
+    elif publisher:
+        books = Book.objects.filter(publisher=publisher)
+    
     else:
         books = Book.objects.all()
         
@@ -100,6 +109,8 @@ def book_list(request):
     return render(request, 'picture_book_app/book_list.html', context={
         'books': page_obj,
         'query': query,
+        'author': author,
+        'publisher': publisher,
     })
 
 
@@ -132,4 +143,7 @@ def book_delete(request, pk):
 
 # 絵本詳細画面
 def book_detail(request, pk):
-    
+    book = get_object_or_404(Book, pk=pk)
+    return render(request, 'picture_book_app/book_detail.html', context={
+        'book': book,
+    })

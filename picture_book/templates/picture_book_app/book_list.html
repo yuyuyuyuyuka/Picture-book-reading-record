@@ -27,7 +27,7 @@
             <a href="{% url 'picture_book_app:book_update' book.pk %}">
                 <button style="margin: 5px;">編集／削除</button>
             </a>
-            <a href="#">
+            <a href="{% url 'picture_book_app:book_detail' book.pk %}">
                 <button style="margin: 5px;">詳細</button>
             </a>
         </div>
