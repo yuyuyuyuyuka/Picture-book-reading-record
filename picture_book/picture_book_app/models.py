@@ -39,7 +39,7 @@ class ReadingComment(models.Model):
 class ReadingRecord(models.Model):
     child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='reading_records')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reading_records')
-    reading_comment =models.ManyToManyField(ReadingComment, blank=True)
+    reading_comments =models.ManyToManyField(ReadingComment, blank=True)
     date = models.DateField()
     read_count = models.PositiveIntegerField()
     
