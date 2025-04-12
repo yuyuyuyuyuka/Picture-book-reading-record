@@ -57,7 +57,7 @@
             </div>
         {% endif %}
 
-        <div style="text-align: center; display: flex; justify-content: center; gap: 10px;"">
+        <div style="text-align: center; display: flex; justify-content: center; gap: 10px;">
             <input type="submit" value="保存">
             <form action="{% url 'picture_book_app:book_delete' book.pk %}" method="POST" style="display:inline;">
                 {% csrf_token %}

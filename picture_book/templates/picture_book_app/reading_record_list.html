@@ -38,7 +38,7 @@
                     <td>{{ record.date }}</td>
                     <td>{{ record.child.name }}</td>
                     <td>{{ record.book.title }}</td>
-                    <td><a href="#" style="padding: 5px 10px; background-color: #D3D3D3; color: black; text-decoration: none; border-radius: 4px;">詳細</a>
+                    <td><a href="{% url 'picture_book_app:reading_record_detail' record.pk %}" style="padding: 5px 10px; background-color: #D3D3D3; color: black; text-decoration: none; border-radius: 4px;">詳細</a>
                     </td>
                 </tr>
             {% empty %}

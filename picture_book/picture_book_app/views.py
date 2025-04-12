@@ -189,3 +189,11 @@ def reading_record_list(request):
         'query': query,
         'select_child': child_id
     })
+    
+
+# 読み聞かせ記録の詳細画面
+def reading_record_detail(request, pk):
+    record = get_object_or_404(ReadingRecord, pk=pk)
+    return render(request, 'picture_book_app/reading_record_detail.html', context={
+        'record': record,
+    })

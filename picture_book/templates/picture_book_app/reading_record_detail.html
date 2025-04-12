@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="centered-container">
+    <h1 style="text-align: left;">絵本読み聞かせ記録の詳細</h1>
+
+    <!-- 1行目 -->
+    <p><strong>絵本：</strong>{{ record.book.title }}</p>
+    
+    <!-- 2行目 -->
+    <p>
+        <strong>日付：</strong>{{ record.date }}
+        <strong>子ども：</strong>{{ record.child.name }}
+        <strong>読んだ回数：</strong>{{ record.read_count }}回
+    </p>
+
+    <!-- 3行目 -->
+    <p>
+        <strong>所有状況：</strong>{{ record.get_book_status_display }}
+        <strong>簡単記録：</strong>
+        {% for comment in record.reading_comments.all %}
+            {{ comment.comment }}
+                {% if not forloop.last %},{% endif %}
+        {% empty %}なし
+        {% endfor %}
+    </p>
+
+    <!-- 4行目 -->
+    <p>
+        <strong>絵本の感想や子の様子・反応記入：</strong><br>
+        {{ record.review|linebreaksbr }}
+    </p>
+
+    <!-- 5行目 -->
+    <div style="display: flex; gap: 20px; margin-top: 10px;">
+        {% if record.photo %}
+        <div>
+            <strong>写真：</strong><br>
+            <img src="{{ record.photo.url }}" alt="写真：" style="max-width: 300px;">
+        </div>
+        {% endif %}
+        {% if record.video %}
+        <div>
+            <strong>動画：</strong><br>
+            <video controls style="max-width: 300px;">
+                <source src="{{ record.video.url }}">
+                動画を再生できません。
+            </video>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 6行目 -->
+    <div style="margin-top: 20px; text-align: right; display: flex; justify-content: center; gap: 10px;"">
+        <a href="{% url 'picture_book_app:reading_record_list' %}">
+            <button type="button" style="padding: 10px 20px; font-size: 1rem;">戻る</button>
+        </a>
+        <a href="#">
+            <button type="button" style="padding: 10px 20px; font-size: 1rem;">編集</button>
+        </a>
+        <a href="#">
+            <button type="button" style="padding: 10px 20px; font-size: 1rem;">削除</button>
+        </a>
+    </div>
+
+
+</div>
+{% endblock %}
