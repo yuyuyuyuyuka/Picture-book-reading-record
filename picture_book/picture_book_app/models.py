@@ -44,11 +44,11 @@ class ReadingRecord(models.Model):
     read_count = models.PositiveIntegerField()
     
     BOOK_STATUS_CHOICES = (
-        (0, '絵本持っている'),
-        (1, '図書館等で借りた')
+        (0, '持ってる'),
+        (1, '借りた')
     )
     
-    book_status = models.IntegerField(choices=BOOK_STATUS_CHOICES)  #0:絵本持っている1:図書館等で借りた
+    book_status = models.IntegerField(choices=BOOK_STATUS_CHOICES, default=0, null=False)  #0:絵本持っている1:図書館等で借りた
     photo = models.ImageField(upload_to='reading_photos/', null=True, blank=True)  #子どもの写真
     video = models.FileField(upload_to='reading_videos/', null=True, blank=True)  #子どもの動画
     review = models.TextField(blank=True)

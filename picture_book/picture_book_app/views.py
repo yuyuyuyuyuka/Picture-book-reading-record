@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from .models import Child, Book
-from .forms import ChildForm, BookForm
+from .forms import ChildForm, BookForm, ReadingRecordForm
 from django.db.models import Q
 from django.core.paginator import Paginator
 
@@ -146,4 +146,20 @@ def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     return render(request, 'picture_book_app/book_detail.html', context={
         'book': book,
+    })
+    
+
+# 絵本の読み聞かせ記録登録画面
+def reading_record_create(request):
+    if request.method == 'POST':
+        form = ReadingRecordForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('picture_book_app:reading_record_list')
+    
+    else:
+        form = ReadingRecordForm()
+        
+    return render(request, 'picture_book_app/reading_record_create.html', context={
+        'form': form,
     })

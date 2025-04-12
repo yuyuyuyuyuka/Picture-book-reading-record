@@ -1,5 +1,6 @@
 from django import forms
-from .models import Child, Book
+from .models import Child, Book, ReadingRecord
+from django.utils import timezone
 
 # 子どもの登録画面
 class ChildForm(forms.ModelForm):
@@ -28,3 +29,38 @@ class BookForm(forms.ModelForm):
             'publisher': '出版社名',
             'cover_image': '絵本の写真',
         }
+
+
+# 絵本の読み聞かせ記録登録画面
+class ReadingRecordForm(forms.ModelForm):
+    
+    class Meta:
+        model = ReadingRecord
+        fields = [
+            'book', 'date', 'child', 'read_count', 'book_status',
+            'photo', 'video', 'reading_comments', 'review'
+        ]
+        labels = {
+            'book': '絵本：',
+            'date': '日付：',
+            'child': '子ども：',
+            'read_count': '読んだ回数：',
+            'book_status': '所有状況：',
+            'photo': '写真：',
+            'video': '動画：',
+            'reading_comments': '簡単記録：',
+            'review': '絵本の感想や子の様子・反応記入：'
+        }
+        widgets = {
+            'date': forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={'type': 'date'},
+            ),
+            'review': forms.Textarea(attrs={'rows': 3}),
+            'reading_comments': forms.SelectMultiple(),
+            'book_status': forms.RadioSelect(),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date'].initial = timezone.now().date()

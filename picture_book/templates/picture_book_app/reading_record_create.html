@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="centered-container">
+    <h1>絵本読み聞かせ記録</h1>
+    <form method="POST" enctype="multipart/form-data" class="reading-record-form">
+        {% csrf_token %}
+        
+        <!-- 絵本の名前（1行） -->
+        <div class="form-row">
+            <label for="{{ form.book.id_for_label }}">{{ form.book.label }}</label>
+            {{ form.book }}
+        </div>
+
+        <!-- 日付、子ども、読んだ回数（1行） -->
+        <div class="form-row date-child-read">
+            <div>
+                <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+                {{ form.date }}
+            </div>
+            <div>
+                <label for="{{ form.child.id_for_label }}">{{ form.child.label }}</label>
+                {{ form.child }}
+            </div>
+            <div>
+                <label for="{{ form.read_count.id_for_label }}">{{ form.read_count.label }}</label>
+                {{ form.read_count }}
+            </div>
+        </div>
+
+        <!-- 所有状況、写真、動画（1行） -->
+        <div class="form-row status-photo-video">
+            <div>
+                <label for="{{ form.book_status.id_for_label }}">{{ form.book_status.label }}</label>
+                <div class="radio-group">
+                    {{ form.book_status }}
+                </div>
+            </div>
+            <div>
+                <label for="{{ form.photo.id_for_label }}">{{ form.photo.label }}</label>
+                {{ form.photo }}
+            </div>
+            <div>
+                <label for="{{ form.video.id_for_label }}">{{ form.video.label }}</label>
+                {{ form.video }}
+            </div>
+        </div>
+
+        <!-- 簡単記録（1行） -->
+        <div class="form-row">
+            <label for="{{ form.reading_comments.id_for_label }}">{{ form.reading_comments.label }}</label>
+            {{ form.reading_comments }}
+        </div>
+
+        <!-- 絵本の感想（1行） -->
+        <div class="form-row review">
+            <label for="{{ form.review.id_for_label }}">{{ form.review.label }}</label>
+            {{ form.review }}
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="保存">
+        </div>
+    </form>
+</div>
+{% endblock %}
