@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from .models import Child, Book
+from .models import Child, Book, ReadingRecord
 from .forms import ChildForm, BookForm, ReadingRecordForm
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -162,4 +162,30 @@ def reading_record_create(request):
         
     return render(request, 'picture_book_app/reading_record_create.html', context={
         'form': form,
+    })
+    
+# 絵本の読み聞かせ記録一覧画面
+def reading_record_list(request):
+    child_id = request.GET.get('child')  #子どもの絞り込み
+    query = request.GET.get('q')  #絵本のフリーワード検索
+    
+    records = ReadingRecord.objects.all()
+    
+    if child_id:
+        records = records.filter(child__id=child_id)
+    if query:
+        records = records.filter(book__title__icontains=query)
+    
+    records = records.order_by('-date')
+    
+    # ページネーション
+    paginator = Paginator(records, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'picture_book_app/reading_record_list.html', context={
+        'records': page_obj,
+        'children': Child.objects.all(),
+        'query': query,
+        'select_child': child_id
     })

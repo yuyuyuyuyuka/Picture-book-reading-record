@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>家族一覧</h1>
+
+    <!-- 検索フォーム -->
+    <form method="GET" style="margin-bottom: 20px;">
+        <label>子ども：
+            <select name="child">
+                <option value="">全て</option>
+                {% for child in children %}
+                    <option value="{{ child.id }}" {% if child.id|stringformat:"s" == selected_child %}selected{% endif %}>
+                        {{ child.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>絵本の名前：
+            <input type="text" name="q" placeholder="タイトルで検索" value="{{ query|default_if_none:''}}">
+        </label>
+        <button type="submit">検索</button>
+    </form>
+    
+    <!-- 一覧表 -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">日付</th>
+                <th scope="col">子の名前</th>
+                <th scope="col">絵本の名前</th>
+                <th scope="col">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record.date }}</td>
+                    <td>{{ record.child.name }}</td>
+                    <td>{{ record.book.title }}</td>
+                    <td><a href="#" style="padding: 5px 10px; background-color: #D3D3D3; color: black; text-decoration: none; border-radius: 4px;">詳細</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">記録が見つかりません</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- ページネーション -->
+     <div style="text-align: center; margin-top: 20px;">
+        {% if records.has_previous %}
+            <a href="?page={{ records.previous_page_number }}{% if query %}&q={{ query }}{% endif %}
+                {% if selected_child %}&child={{ selected_child }}{% endif %}">前へ
+            </a>
+        {% endif %}
+
+        <span>Page{{ records_number }} / {{ records.paginator.num_pages }}</span>
+
+        {% if records.has_next %}
+            <a href="?page={{ records.next_page_number }}{% if query %}&q={{ query }}{% endif %}
+            {% if selected_child %}&child={{ selected_child }}{% endif %}">次へ">
+            </a>
+        {% endif %}
+     </div>
+</div>
+{% endblock %}
