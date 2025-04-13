@@ -197,3 +197,29 @@ def reading_record_detail(request, pk):
     return render(request, 'picture_book_app/reading_record_detail.html', context={
         'record': record,
     })
+    
+
+# 読み聞かせ記録編集画面
+def reading_record_update(request,pk):
+    record = get_object_or_404(ReadingRecord, pk=pk)
+    
+    if request.method == 'POST':
+        form = ReadingRecordForm(request.POST, request.FILES, instance=record)
+        if form.is_valid():
+            form.save()
+            return redirect('picture_book_app:reading_record_detail', pk=record.pk)
+        
+    else:
+        form = ReadingRecordForm(instance=record)
+    return render(request, 'picture_book_app/reading_record_update.html', context={
+        'form': form,
+        'record': record,
+    })
+
+# 読み聞かせ記録削除画面
+def reading_record_delete(request,pk):
+    record = get_object_or_404(ReadingRecord, pk=pk)
+    
+    if request.method == 'POST':
+        record.delete()
+        return redirect('picture_book_app:reading_record_list')

@@ -50,18 +50,37 @@
     </div>
 
     <!-- 6行目 -->
-    <div style="margin-top: 20px; text-align: right; display: flex; justify-content: center; gap: 10px;"">
+    <div style="margin-top: 20px; text-align: right; display: flex; justify-content: right; gap: 10px;"">
         <a href="{% url 'picture_book_app:reading_record_list' %}">
             <button type="button" style="padding: 10px 20px; font-size: 1rem;">戻る</button>
         </a>
-        <a href="#">
+        <a href="{% url 'picture_book_app:reading_record_update' record.pk %}">
             <button type="button" style="padding: 10px 20px; font-size: 1rem;">編集</button>
         </a>
-        <a href="#">
-            <button type="button" style="padding: 10px 20px; font-size: 1rem;">削除</button>
-        </a>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+            style="padding: 10px 20px; font-size: 1rem;">削除
+        </button>
     </div>
-
-
+    <!-- モーダル本体 -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">確認</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+            </div>
+            <div class="modal-body">
+              本当に削除しますか？
+            </div>
+            <div class="modal-footer">
+              <form action="{% url 'picture_book_app:reading_record_delete' record.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="submit" class="btn btn-danger">削除する</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 {% endblock %}
