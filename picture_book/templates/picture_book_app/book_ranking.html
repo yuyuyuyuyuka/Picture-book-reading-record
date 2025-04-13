@@ -39,7 +39,7 @@
     
     
     <!-- ページネーション -->
-     <div>
+     <div class="pagination">
         {% if page_obj.has_previous %}
             <a href="?page{{ page_obj.previous_page_number }}
                 {% if selected_child_id %}&child_id={{ selected_child_id }}{% endif %}">前へ

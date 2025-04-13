@@ -1,11 +1,36 @@
 /* 全ページ共通で中央に表示するレイアウト */
 .container {
-  max-width: 1200px; /* 幅を広げる */
+  max-width: 1000px; /* 幅を広げる */
   margin: 0 auto;
   padding: 2em;
   background-color: #fff;
   margin-top: 10px; /* ナビゲーションバーの高さ分だけ余白を設定 */
 }
+/* 新規アカウント登録画面等の中央配置 */
+.container1 {
+  max-width: 400px; /* 最大幅を調整 */
+  margin: 0 auto; /* 左右中央寄せ */
+  padding: 2em;
+  background-color: #fff;
+  margin-top: 10px; /* ナビゲーションバーの高さ分だけ余白を設定 */
+  line-height: 1.6; /* 行間を少し広げる */
+}
+
+.container1 form {
+  flex-direction: column; /* フォームを縦に並べる */
+  gap: 1.5em; /* 各フォーム間のスペースを広げる */
+}
+
+.container1 label {
+  font-weight: bold;
+  margin-bottom: 5px; /* ラベルと入力フォームの間隔を調整 */
+}
+
+.container1 .password-rules ul {
+  padding-left: 20px; /* リストのインデント */
+  line-height: 1.6; /* パスワードルールの行間を広げる */
+}
+
 
 /* 登録画面やその他：ラベル横＋フィールド */
 .form-row {
@@ -38,8 +63,8 @@
 
 .centered-container {
   display: flex;
+  justify-content: center; /* 横方向の中央揃え */
   flex-direction: column;
-  justify-content: flex-start; /* 上に寄せる */
   align-items: center;
   text-align: center;
   width: 100%;
@@ -185,10 +210,11 @@
   width: 90px;     /* 幅を広げる */
 }
 
-/* ボタンのサイズを大きく */
-button {
+button, input[type="submit"] {
   font-size: 15px;  /* ボタンの文字を大きく */
   padding: 5px 15px;  /* ボタンのサイズを調整 */
+  background-color: #f0f0f0; /* 背景色を統一 */
+  cursor: pointer;  /* ポインターカーソルに変更 */
 }
 
 /* 合計読んだ回数も大きく表示 */
@@ -209,4 +235,53 @@ button {
 }
 .book-detail a:hover {
   text-decoration: underline;  
+}
+
+/* 表紙 */
+.form-group {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+  width: 150px;
+}
+
+.form-group input, .form-group select, .form-group img {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.form-group img {
+  max-width: 200px;
+  height: auto;
+}
+
+.file-input {
+  display: inline-block;
+  margin-top: 5px;
+}
+
+/* ボタンのスタイル */
+button, input[type="submit"] {
+  padding: 5px 15px;
+  font-size: 1rem;
+}
+/* ボタンの中央揃え */
+button, input[type="submit"], a button {
+  text-align: center;
+}
+
+/* ページネーションを中央に表示 */
+.pagination {
+  display: flex;
+  justify-content: center; /* 水平方向に中央寄せ */
+  margin-top: 20px;
+}
+
+.pagination a {
+  margin: 0 10px; /* 左右にスペースを追加 */
+  text-decoration: none;
 }

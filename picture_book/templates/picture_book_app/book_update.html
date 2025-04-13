@@ -1,33 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
-    .form-group {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        font-weight: bold;
-        width: 150px;
-    }
-
-    .form-group input, .form-group select, .form-group img {
-        flex: 1;
-        margin-left: 10px;
-    }
-
-    .form-group img {
-        max-width: 200px;
-        height: auto;
-    }
-
-    .file-input {
-        display: inline-block;
-        margin-top: 5px;
-    }
-</style>
-
 <div class="centered-container">
     <h3>絵本編集・削除</h3>
     <a href="{% url 'picture_book_app:book_list' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>

@@ -209,7 +209,7 @@ class UserPasswordChangeForm(forms.Form):
         help_text=password_validation.password_validators_help_text_html()
     )
     new_password2 = forms.CharField(
-        label='新しいパスワード(再入力)',
+        label='新しいパスワード(再)',
         widget=forms.PasswordInput(),
     )
     
