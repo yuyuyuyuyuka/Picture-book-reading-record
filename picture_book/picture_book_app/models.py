@@ -56,6 +56,6 @@ class ReadingRecord(models.Model):
     update_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.child.name} - {self.book.title}({self.data})"
+        return f"{self.child.name} - {self.read_count}回読まれた"
     
 

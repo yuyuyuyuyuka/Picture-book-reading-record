@@ -21,4 +21,5 @@ urlpatterns = [
     path('reading_record_detail/<int:pk>/', views.reading_record_detail, name='reading_record_detail'),
     path('reading_record_update/<int:pk>/', views.reading_record_update, name='reading_record_update'),
     path('reading_record_delete/<int:pk>/', views.reading_record_delete, name='reading_record_delete'),
+    path('book_ranking/', views.book_ranking, name='book_ranking'),
 ]

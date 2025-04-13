@@ -4,6 +4,7 @@ from .models import Child, Book, ReadingRecord
 from .forms import ChildForm, BookForm, ReadingRecordForm
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.db.models import Count, Sum
 
 class HomeView(TemplateView):
     template_name = 'picture_book_app/home.html'
@@ -223,3 +224,47 @@ def reading_record_delete(request,pk):
     if request.method == 'POST':
         record.delete()
         return redirect('picture_book_app:reading_record_list')
+
+
+# 好きな絵本ランキング
+def book_ranking(request):
+    child_id = request.GET.get('child_id')
+    
+    if child_id:
+        records = ReadingRecord.objects.filter(child_id=child_id)
+
+    else:
+        records = ReadingRecord.objects.all()
+
+    # 絵本ごと読んだ回数を集計
+    ranking = (
+        records.values('book__id', 'book__title')
+        .annotate(total_reads=Sum('read_count'))
+        .order_by('-total_reads')
+    )
+    
+    # ページネーション
+    paginator = Paginator(ranking, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    for i, r in enumerate(page_obj.object_list):
+        print(r)
+    
+    # 順位の計算
+    start_rank = (page_obj.number - 1) * paginator.per_page + 1
+    ranked_books = []
+    
+    for r in page_obj.object_list:
+        ranked_books.append({'rank': start_rank, 'book_title': r['book__title'], 'total_reads': r['total_reads']})
+        start_rank += 1
+    
+    total_reads = records.aggregate(total=Sum('read_count'))['total'] or 0
+    
+    return render(request, 'picture_book_app/book_ranking.html', context={
+        'books_with_rank': ranked_books,
+        'children': Child.objects.all(),
+        'selected_child_id': child_id,
+        'total_reads': total_reads,
+        'page_obj': page_obj,
+    })
