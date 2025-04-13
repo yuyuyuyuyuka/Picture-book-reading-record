@@ -4,7 +4,7 @@
   margin: 0 auto;
   padding: 2em;
   background-color: #fff;
-  margin-top: 80px; /* ナビゲーションバーの高さ分だけ余白を設定 */
+  margin-top: 10px; /* ナビゲーションバーの高さ分だけ余白を設定 */
 }
 
 /* 登録画面やその他：ラベル横＋フィールド */
@@ -43,6 +43,7 @@
   align-items: center;
   text-align: center;
   width: 100%;
+  margin-top: 20px;
 }
 
 /* その他のフォーム要素のスタイル */
@@ -168,4 +169,44 @@
 /* 保存ボタンを右端に配置し、サイズを調整 */
 .reading-record-form .form-group {
   text-align: right;
+}
+
+
+.child-label {
+  font-size: 20px;  /* フォントサイズを大きく */
+  font-weight: bold;  /* 太字にする */
+  margin-right: 10px;  /* <select>との間に少しスペースを追加 */
+}
+
+/* <select> のスタイル */
+.child-select {
+  font-size: 17px;  /* フォントサイズを大きく */
+  padding: 5px;    /* パディングを調整 */
+  width: 90px;     /* 幅を広げる */
+}
+
+/* ボタンのサイズを大きく */
+button {
+  font-size: 15px;  /* ボタンの文字を大きく */
+  padding: 5px 15px;  /* ボタンのサイズを調整 */
+}
+
+/* 合計読んだ回数も大きく表示 */
+.total-reads {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: right;
+}
+
+/* 増やしたいテキストのサイズ */
+.book-detail {
+  font-size: 1.3rem;  /* フォントサイズを大きく */
+}
+.book-detail a {
+  font-size: 1.3rem;  /* 著者や出版社リンクも大きく */
+  color: #007bff;  /* リンクの色 */
+}
+.book-detail a:hover {
+  text-decoration: underline;  
 }

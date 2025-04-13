@@ -2,6 +2,36 @@
 {% block content %}
 <div class="container">
     <h1>お話の足跡</h1>
-    <p>本日の読み聞かせ一覧</p>
+    <h2 style="font-size: 1.8rem;">＜{{ today|date:"Y年m月d日" }}の読み聞かせ一覧＞</h2>
+
+    <div style="width: 180px; margin-left: auto; margin-right: 20px; margin-top: 30px;">
+        <a href="{% url 'picture_book_app:reading_record_list' %}" 
+           style="font-size: 1.1rem; text-decoration: none; color: #007BFF;">
+            過去の記録を振り返る
+        </a>
+    </div>
+    
+    {% if today_records %}
+        <table style="width: 100%; border-collapse: collapse; font-size: 1.1rem;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding: 8px;">絵本の名前</th>
+                    <th style="text-align: left; padding: 8px;">子ども</th>
+                    <th style="text-align: left; padding: 8px;">読んだ回数</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in today_records %}
+                <tr>
+                    <td style="padding: 8px;">・{{ record.book.title }}</td>
+                    <td style="padding: 8px;">{{ record.child.name }}</td>
+                    <td style="padding: 8px;">{{ record.read_count }}回</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="font-size: 1.2rem;">今日はまだ読み聞かせ記録がありません。</p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -16,9 +16,9 @@
 
         <!-- 右側：本の情報 -->
         <div style="flex: 2; margin-top: 60px;">
-            <p><strong>絵本のタイトル：</strong>{{ book.title }}</p>
-            <p><strong>著者：</strong><a href="{% url 'picture_book_app:book_list' %}?author={{ book.author }}">{{ book.author }}</a></p>
-            <p><strong>出版社：</strong><a href="{% url 'picture_book_app:book_list' %}?publisher={{ book.publisher }}">{{ book.publisher }}</a></p>
+            <p class="book-detail"><strong>絵本のタイトル：</strong>{{ book.title }}</p>
+            <p class="book-detail"><strong>著者：</strong><a href="{% url 'picture_book_app:book_list' %}?author={{ book.author }}">{{ book.author }}</a></p>
+            <p class="book-detail"><strong>出版社：</strong><a href="{% url 'picture_book_app:book_list' %}?publisher={{ book.publisher }}">{{ book.publisher }}</a></p>
         </div>
     </div>
 </div>
