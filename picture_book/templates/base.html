@@ -11,10 +11,17 @@
         .navbar-nav .nav-item {
             margin-right: 20px; /* 右側に余白を追加 */
         }
+        .navbar {
+            background-color: #FFD1DC !important; /* 背景色 */
+        }
+        .navbar .nav-link {
+            color: black !important; /* 黒色に設定 */
+        }
+        
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'picture_book_app:home' %}">お話の足跡</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +39,7 @@
                         <a class="nav-link" href="{% url 'picture_book_app:book_list' %}">本棚</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                        <a class="nav-link dropdown-toggle" href="{% url 'picture_book_app:reading_record_create' %}" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
                           記録
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

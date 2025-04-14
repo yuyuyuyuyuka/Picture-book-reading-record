@@ -3,7 +3,7 @@ from .forms import(
     RegistForm, UserLoginForm, RequestPasswordResetForm,NewSetPasswordForm,
     FamilyRegistForm, UserUpdateForm,UserPasswordChangeForm,
     )
-from .models import PasswordResetToken, Invitation, Family
+from .models import PasswordResetToken, Invitation
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,6 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 import logging
 from django.utils import timezone
@@ -204,6 +203,7 @@ def mypage(request):
 
 
 # 家族招待URL画面の招待URLを作成
+@login_required
 def create_invitation(request):
     invitation_url = ''
     
@@ -278,6 +278,7 @@ def invalid_invitation(request):
   
 
 # アカウント情報変更（名前・メールアドレス）
+@login_required
 def profile_update(request):
     if request.method == 'POST':
         form = UserUpdateForm(request.POST, instance=request.user)
@@ -291,6 +292,7 @@ def profile_update(request):
     })
 
 # アカウント情報の変更（パスワード）
+@login_required
 def password_change(request):
     if request.method == 'POST':
         form = UserPasswordChangeForm(user=request.user, data=request.POST)
@@ -325,7 +327,7 @@ def family_list(request):
     
 
 # 家族編集画面
-
+@login_required
 def family_update(request, pk):
     member = get_object_or_404(User, pk=pk)  #このUserは家族のことを指す
     
@@ -343,7 +345,7 @@ def family_update(request, pk):
         })
         
 # 家族削除
-
+@login_required
 def family_delete(request, pk):
     member = get_object_or_404(User, pk=pk)
     

@@ -3,9 +3,11 @@ from .models import Child, Book, ReadingRecord
 from .forms import ChildForm, BookForm, ReadingRecordForm
 from django.db.models import Q
 from django.core.paginator import Paginator
-from django.db.models import Count, Sum
+from django.db.models import Sum
 from django.utils.timezone import localdate
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
     today = localdate()
     today_records = ReadingRecord.objects.filter(date=today).order_by('-created_at')
@@ -17,6 +19,7 @@ def home(request):
     
 
 # 子ども一覧画面
+@login_required
 def child_list(request):
     children = Child.objects.filter(family_id=request.user.family_id)
     return render(request, 'picture_book_app/child_list.html', context={
@@ -24,6 +27,7 @@ def child_list(request):
     })
     
 # 子ども登録画面
+@login_required
 def child_create(request):
     if request.method == 'POST':
         form = ChildForm(request.POST)
@@ -41,6 +45,7 @@ def child_create(request):
 
 
 # 子ども編集
+@login_required
 def child_update(request, pk):
     child = get_object_or_404(Child, pk=pk, family_id=request.user.family_id)
     
@@ -59,6 +64,7 @@ def child_update(request, pk):
 
 
 # 子ども削除
+@login_required
 def child_delete(request, pk):
     child = get_object_or_404(Child, pk=pk, family_id=request.user.family_id)
     
@@ -72,6 +78,7 @@ def child_delete(request, pk):
 
 
 # 絵本新規登録画面
+@login_required
 def book_create(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
@@ -87,6 +94,7 @@ def book_create(request):
 
 
 # 絵本一覧画面
+@login_required
 def book_list(request):
     query = request.GET.get('q')
     author = request.GET.get('author')
@@ -122,6 +130,7 @@ def book_list(request):
 
 
 # 絵本編集
+@login_required
 def book_update(request, pk):
     book = get_object_or_404(Book, pk=pk)
     
@@ -140,6 +149,7 @@ def book_update(request, pk):
     })
 
 # 絵本削除
+@login_required
 def book_delete(request, pk):
     book = get_object_or_404(Book, pk=pk)
     
@@ -149,6 +159,7 @@ def book_delete(request, pk):
 
 
 # 絵本詳細画面
+@login_required
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
     return render(request, 'picture_book_app/book_detail.html', context={
@@ -157,6 +168,7 @@ def book_detail(request, pk):
     
 
 # 絵本の読み聞かせ記録登録画面
+@login_required
 def reading_record_create(request):
     if request.method == 'POST':
         form = ReadingRecordForm(request.POST, request.FILES)
@@ -172,6 +184,7 @@ def reading_record_create(request):
     })
     
 # 絵本の読み聞かせ記録一覧画面
+@login_required
 def reading_record_list(request):
     child_id = request.GET.get('child')  #子どもの絞り込み
     query = request.GET.get('q')  #絵本のフリーワード検索
@@ -199,6 +212,7 @@ def reading_record_list(request):
     
 
 # 読み聞かせ記録の詳細画面
+@login_required
 def reading_record_detail(request, pk):
     record = get_object_or_404(ReadingRecord, pk=pk)
     return render(request, 'picture_book_app/reading_record_detail.html', context={
@@ -207,6 +221,7 @@ def reading_record_detail(request, pk):
     
 
 # 読み聞かせ記録編集画面
+@login_required
 def reading_record_update(request,pk):
     record = get_object_or_404(ReadingRecord, pk=pk)
     
@@ -224,6 +239,7 @@ def reading_record_update(request,pk):
     })
 
 # 読み聞かせ記録削除画面
+@login_required
 def reading_record_delete(request,pk):
     record = get_object_or_404(ReadingRecord, pk=pk)
     
@@ -233,6 +249,7 @@ def reading_record_delete(request,pk):
 
 
 # 好きな絵本ランキング
+@login_required
 def book_ranking(request):
     child_id = request.GET.get('child_id')
     

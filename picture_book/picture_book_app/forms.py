@@ -56,9 +56,14 @@ class ReadingRecordForm(forms.ModelForm):
                 format='%Y-%m-%d',
                 attrs={'type': 'date'},
             ),
-            'review': forms.Textarea(attrs={'rows': 3}),
-            'reading_comments': forms.SelectMultiple(),
-            'book_status': forms.RadioSelect(),
+            'review': forms.Textarea(attrs={'rows': 2}),
+            'reading_comments': forms.SelectMultiple(attrs={
+                'class': 'form-select',
+                'multiple': 'multiple', 
+                'aria-label': '簡単記録を選択',
+                'style': 'height: 300px;',
+            }),
+            'book_status': forms.RadioSelect(attrs={'class': 'form-check-input'}),
         }
     
     def __init__(self, *args, **kwargs):

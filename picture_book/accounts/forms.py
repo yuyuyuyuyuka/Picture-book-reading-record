@@ -1,7 +1,6 @@
 from django import forms
 from .models import User, Family
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MinLengthValidator
 import re

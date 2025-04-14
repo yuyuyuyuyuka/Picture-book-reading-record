@@ -28,22 +28,31 @@
         </div>
 
         <!-- 所有状況、写真、動画（1行） -->
-        <div class="form-row status-photo-video">
+        <div class="form-row" style="display: flex; align-items: flex-start; gap: 10px;">
+            <label style="font-weight: bold; padding-top: 5px;">{{ form.book_status.label }}</label>
             <div>
-                <label for="{{ form.book_status.id_for_label }}">{{ form.book_status.label }}</label>
-                <div class="radio-group">
-                    {{ form.book_status }}
-                </div>
+                {% for radio in form.book_status %}
+                    <div class="form-check">
+                        {{ radio.tag }}
+                        <label class="form-check-label" for="{{ radio.id_for_label }}">
+                            {{ radio.choice_label }}
+                        </label>
+                    </div>
+                {% endfor %}
             </div>
+
             <div>
                 <label for="{{ form.photo.id_for_label }}">{{ form.photo.label }}</label>
                 {{ form.photo }}
             </div>
+
             <div>
                 <label for="{{ form.video.id_for_label }}">{{ form.video.label }}</label>
                 {{ form.video }}
             </div>
         </div>
+
+
 
         <!-- 簡単記録（1行） -->
         <div class="form-row">
@@ -52,14 +61,12 @@
         </div>
 
         <!-- 絵本の感想（1行） -->
-        <div class="form-row review">
+        <div class="form-row-review">
             <label for="{{ form.review.id_for_label }}">{{ form.review.label }}</label>
             {{ form.review }}
         </div>
 
-        <div class="form-group">
-            <input type="submit" value="保存" style="margin-left: 80px; padding: 10px 20px;">
-        </div>
+        <input type="submit" value="保存">
     </form>
 </div>
 {% endblock %}
