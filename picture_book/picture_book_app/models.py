@@ -1,8 +1,9 @@
 from django.db import models
+from accounts.models import Family
 
 # 子どもモデル
 class Child(models.Model):
-    family_id = models.ForeignKey('accounts.Family', on_delete=models.CASCADE, null=False, blank=False, related_name='children')
+    family_id = models.ForeignKey(Family, on_delete=models.CASCADE, null=False, blank=False, related_name='children')
     name = models.CharField(max_length=225)
     birthday = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -13,6 +14,7 @@ class Child(models.Model):
 
 # 絵本モデル
 class Book(models.Model):
+    family_id = models.ForeignKey(Family, on_delete=models.CASCADE, related_name='books',null=False, blank=False)
     title = models.CharField(max_length=225)
     author = models.CharField(max_length=225)
     publisher = models.CharField (max_length=225)
@@ -37,6 +39,7 @@ class ReadingComment(models.Model):
 
 # 読み聞かせ記録モデル
 class ReadingRecord(models.Model):
+    family_id = models.ForeignKey(Family, on_delete=models.CASCADE, related_name='reading_records', null=False, blank=False)
     child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='reading_records')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reading_records')
     reading_comments =models.ManyToManyField(ReadingComment, blank=True)

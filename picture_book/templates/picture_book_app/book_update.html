@@ -2,7 +2,6 @@
 {% block content %}
 <div class="centered-container">
     <h3>絵本編集・削除</h3>
-    <a href="{% url 'picture_book_app:book_list' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div style="margin-bottom: 15px;">

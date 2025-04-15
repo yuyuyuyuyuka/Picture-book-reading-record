@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h1>家族一覧</h1>
+    <h1>子ども一覧</h1>
+    <a href="{% url 'accounts:mypage' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th scope="col"></th>
                 <th scope="col">名前／ニックネーム</th>
                 <th scope="col">誕生日</th>
                 <th scope="col">操作</th>
@@ -14,7 +14,6 @@
         <tbody>
             {% for child in children %}
                 <tr>
-                    <th scope="row">{{ forloop.counter }}</th> <!-- 行番号を表示 -->
                     <td>{{ child.name }}</td>
                     <td>{{ child.birthday }}</td>
                     <td><a href="{% url 'picture_book_app:child_update' child.pk %}" style="padding: 5px 10px; background-color: #D3D3D3; color: black; text-decoration: none; border-radius: 4px;">編集</a>

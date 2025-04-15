@@ -9,7 +9,7 @@ admin.site.register(Child, ChildAdmin)
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'publisher', 'cover_image', 'created_at', 'update_at')
+    list_display = ('title', 'family_id','author', 'publisher', 'cover_image', 'created_at', 'update_at')
     search_fields = ['title']
     
 admin.site.register(Book, BookAdmin)
@@ -24,7 +24,7 @@ admin.site.register(ReadingComment, ReadingCommentAdmin)
 
 class ReadingRecordAdmin(admin.ModelAdmin):
     list_display = (
-        'child', 'book', 'get_reading_comments', 'date', 'read_count', 'book_status',
+        'child', 'book', 'family_id', 'get_reading_comments', 'date', 'read_count', 'book_status',
         'photo', 'video', 'review', 'created_at', 'update_at',
     )
     search_fields = ['child__name', 'book__title','date']

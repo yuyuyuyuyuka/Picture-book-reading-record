@@ -2,6 +2,7 @@
 {% block content %}
 <div class="container1">
     <h1>家族招待</h1>
+    <a href="{% url 'accounts:mypage' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
     <form method="POST">
         {% csrf_token %}
         <button type="submit">家族招待URLを作成する</button>
@@ -20,7 +21,9 @@
         <p>※このリンクを招待したい家族に送ってください。</p>
         <p>※リンクは1度利用されると無効になります。</p>
 
-        <p>マイページへ戻る</p>
+        <p style="text-align: center;">
+            <a href="{% url 'accounts:mypage' %}">マイページへ戻る</a>
+        </p>
 
     {% endif %}
 </div>

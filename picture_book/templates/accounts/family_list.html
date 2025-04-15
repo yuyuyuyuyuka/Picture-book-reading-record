@@ -3,10 +3,10 @@
 {% block content %}
 <div class="container">
     <h1>家族一覧</h1>
+    <a href="{% url 'accounts:mypage' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th scope="col"></th>
                 <th scope="col">名前／ニックネーム</th>
                 <th scope="col">操作</th>
             </tr>
@@ -14,7 +14,6 @@
         <tbody>
             {% for member in members %}
                 <tr>
-                    <th scope="row">{{ forloop.counter }}</th> <!-- 行番号を表示 -->
                     <td>{{ member.username }}</td> <!-- メンバーの名前 -->
                     <td><a href="{% url 'accounts:family_update' member.pk %}" style="padding: 5px 10px; background-color: #D3D3D3; color: black; text-decoration: none; border-radius: 4px;">編集</a>
                     </td>

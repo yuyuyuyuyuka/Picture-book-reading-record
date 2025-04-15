@@ -10,7 +10,10 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def home(request):
     today = localdate()
-    today_records = ReadingRecord.objects.filter(date=today).order_by('-created_at')
+    today_records = ReadingRecord.objects.filter(
+        date=today,
+        family_id = request.user.family_id  #家族ごと見えるように
+    ).order_by('-created_at')
     
     return render(request,'picture_book_app/home.html', context={
         'today_records': today_records,
@@ -83,7 +86,9 @@ def book_create(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            book = form.save(commit=False)
+            book.family_id = request.user.family_id
+            book.save()
             return redirect('picture_book_app:book_list')
     else:
         form = BookForm()
@@ -100,21 +105,22 @@ def book_list(request):
     author = request.GET.get('author')
     publisher = request.GET.get('publisher')
     
+    # 家族ごと見れるように
+    books = Book.objects.filter(family_id = request.user.family_id)
+    
     # 検索機能
     if query:
-        books = Book.objects.filter(
+        books = books.filter(
             Q(title__icontains=query)|
             Q(author__icontains=query)|
             Q(publisher__icontains=query)
         )
     elif author:
-        books = Book.objects.filter(author=author)
+        books = books.objects.filter(author=author)
         
     elif publisher:
-        books = Book.objects.filter(publisher=publisher)
+        books = books.objects.filter(publisher=publisher)
     
-    else:
-        books = Book.objects.all()
         
     # ページネーション
     paginator = Paginator(books, 10)
@@ -132,7 +138,7 @@ def book_list(request):
 # 絵本編集
 @login_required
 def book_update(request, pk):
-    book = get_object_or_404(Book, pk=pk)
+    book = get_object_or_404(Book, pk=pk, family_id=request.user.family_id)
     
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
@@ -151,7 +157,7 @@ def book_update(request, pk):
 # 絵本削除
 @login_required
 def book_delete(request, pk):
-    book = get_object_or_404(Book, pk=pk)
+    book = get_object_or_404(Book, pk=pk, family_id=request.user.family_id)
     
     if request.method == 'POST':
         book.delete()
@@ -161,7 +167,7 @@ def book_delete(request, pk):
 # 絵本詳細画面
 @login_required
 def book_detail(request, pk):
-    book = get_object_or_404(Book, pk=pk)
+    book = get_object_or_404(Book, pk=pk, family_id=request.user.family_id)
     return render(request, 'picture_book_app/book_detail.html', context={
         'book': book,
     })
@@ -173,7 +179,10 @@ def reading_record_create(request):
     if request.method == 'POST':
         form = ReadingRecordForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            record = form.save(commit=False)
+            record.family_id = request.user.family_id
+            record.save()
+            form.save_m2m()
             return redirect('picture_book_app:reading_record_list')
     
     else:
@@ -189,7 +198,7 @@ def reading_record_list(request):
     child_id = request.GET.get('child')  #子どもの絞り込み
     query = request.GET.get('q')  #絵本のフリーワード検索
     
-    records = ReadingRecord.objects.all()
+    records = ReadingRecord.objects.filter(family_id=request.user.family_id)
     
     if child_id:
         records = records.filter(child__id=child_id)
@@ -205,7 +214,7 @@ def reading_record_list(request):
     
     return render(request, 'picture_book_app/reading_record_list.html', context={
         'records': page_obj,
-        'children': Child.objects.all(),
+        'children': Child.objects.filter(family_id=request.user.family_id),
         'query': query,
         'select_child': child_id
     })
@@ -214,7 +223,7 @@ def reading_record_list(request):
 # 読み聞かせ記録の詳細画面
 @login_required
 def reading_record_detail(request, pk):
-    record = get_object_or_404(ReadingRecord, pk=pk)
+    record = get_object_or_404(ReadingRecord, pk=pk, family_id=request.user.family_id)
     return render(request, 'picture_book_app/reading_record_detail.html', context={
         'record': record,
     })
@@ -223,7 +232,7 @@ def reading_record_detail(request, pk):
 # 読み聞かせ記録編集画面
 @login_required
 def reading_record_update(request,pk):
-    record = get_object_or_404(ReadingRecord, pk=pk)
+    record = get_object_or_404(ReadingRecord, pk=pk, family_id=request.user.family_id)
     
     if request.method == 'POST':
         form = ReadingRecordForm(request.POST, request.FILES, instance=record)
@@ -241,7 +250,7 @@ def reading_record_update(request,pk):
 # 読み聞かせ記録削除画面
 @login_required
 def reading_record_delete(request,pk):
-    record = get_object_or_404(ReadingRecord, pk=pk)
+    record = get_object_or_404(ReadingRecord, pk=pk, family_id=request.user.family_id)
     
     if request.method == 'POST':
         record.delete()
@@ -253,11 +262,10 @@ def reading_record_delete(request,pk):
 def book_ranking(request):
     child_id = request.GET.get('child_id')
     
+    records = ReadingRecord.objects.filter(family_id=request.user.family_id)
+    
     if child_id:
-        records = ReadingRecord.objects.filter(child_id=child_id)
-
-    else:
-        records = ReadingRecord.objects.all()
+        records = records.filter(child_id=child_id)
 
     # 絵本ごと読んだ回数を集計
     ranking = (
@@ -271,8 +279,6 @@ def book_ranking(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    for i, r in enumerate(page_obj.object_list):
-        print(r)
     
     # 順位の計算
     start_rank = (page_obj.number - 1) * paginator.per_page + 1
@@ -286,7 +292,7 @@ def book_ranking(request):
     
     return render(request, 'picture_book_app/book_ranking.html', context={
         'books_with_rank': ranked_books,
-        'children': Child.objects.all(),
+        'children': Child.objects.filter(family_id=request.user.family_id),
         'selected_child_id': child_id,
         'total_reads': total_reads,
         'page_obj': page_obj,
