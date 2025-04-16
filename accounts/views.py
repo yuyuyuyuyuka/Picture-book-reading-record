@@ -20,6 +20,8 @@ import logging
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth import update_session_auth_hash
+import sendgrid
+from sendgrid.helpers.mail import Mail
 
 
 
@@ -60,6 +62,19 @@ def user_logout(request):
     messages.success(request, 'ログアウトしました')
     return redirect('accounts:login')
 
+# SendGrid Web API で送信
+def send_password_reset_email(to_email, reset_url):
+    sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=to_email,
+        subject='【お話の足跡】パスワード再設定のお知らせ',
+        plain_text_content=f'以下のリンクからパスワードを再設定してください。\n\n{reset_url}'
+    )
+    response = sg.send(message)
+    return response
+
+
 # パスワード再設定
 def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
@@ -84,24 +99,30 @@ def request_password_reset(request):
         # リセット用URL作成
         token = password_reset_token.token
         uidb64 = urlsafe_base64_encode(str(user.pk).encode())
-        reset_path = reverse('accounts:password_reset_confirm', args=[uidb64, token])
-        reset_url = f"https://YukaMurata.pythonanywhere.com{reset_path}"
-
-        # メールの内容作成
-        subject = '【お話の足跡】パスワード再設定のお知らせ'
-        message = render_to_string('accounts/password_reset_email.txt', context={
-            'reset_url':reset_url,
-        })
-
-        send_mail(
-            subject,
-            message,
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False,
+        reset_url = request.build_absolute_uri(
+            reverse('accounts:password_reset_confirm', args=[uidb64, token])
         )
-
+        
+        send_password_reset_email(email, reset_url)
+        
         return redirect('accounts:password_reset_done')
+
+    
+        # # メールの内容作成
+        # subject = '【お話の足跡】パスワード再設定のお知らせ'
+        # message = render_to_string('accounts/password_reset_email.txt', context={
+        #     'reset_url':reset_url,
+        # })
+
+        # send_mail(
+        #     subject,
+        #     message,
+        #     settings.DEFAULT_FROM_EMAIL,
+        #     [email],
+        #     fail_silently=False,
+        # )
+
+        # return redirect('accounts:password_reset_done')
     return render(request, 'accounts/password_reset_form.html', context={
         'reset_form':form
     })
