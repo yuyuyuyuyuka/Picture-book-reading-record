@@ -5,20 +5,28 @@
         <h1>家族編集・削除</h1>
     </div>
 
-<!-- 家族一覧へ戻るリンク -->
-<a href="{% url 'accounts:family_list' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px; margin-left: 0;">←戻る</a>
+    <!-- 戻るリンク -->
+    <a href="{% url 'accounts:family_list' %}" style="text-decoration: none; font-size: 1.2em; display: block; margin-top: 10px;">←戻る</a>
 
-<!-- 編集ボタン -->
-    <form method="POST" style="display: inline-block;">
+    <!-- 編集フォーム（名前などの編集） -->
+    <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="保存" style="padding: 5px 15px;">
-
-
-    <!-- 削除ボタン -->
-    <form action="{% url 'accounts:family_delete' member.pk %}" method="POST" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" onclick="return confirm('本当に削除しますか？');" style="padding: 5px 15px;">削除</button>
     </form>
+
+    <!-- 保存・削除ボタンを横並びにして中央配置 -->
+    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+        <!-- 保存ボタン -->
+        <form method="POST">
+            {% csrf_token %}
+            <input type="submit" value="保存" style="padding: 5px 15px;">
+        </form>
+
+        <!-- 削除ボタン -->
+        <form action="{% url 'accounts:family_delete' member.pk %}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+            {% csrf_token %}
+            <button type="submit" style="padding: 5px 15px;">削除</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

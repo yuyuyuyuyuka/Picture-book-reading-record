@@ -359,6 +359,8 @@ def family_delete(request, pk):
         'member':member,
     })
 
-
-def home(request):
-    return render(request, 'home.html')
+# トップ画面（ポートフォリオ）
+def top(request):
+    return render(request, 'top.html', context={
+        'MEDIA_URL': settings.MEDIA_URL,
+    })

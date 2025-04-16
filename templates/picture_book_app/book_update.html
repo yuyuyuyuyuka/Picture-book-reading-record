@@ -2,7 +2,9 @@
 {% block content %}
 <div class="centered-container">
     <h3>絵本編集・削除</h3>
-    <form method="POST" enctype="multipart/form-data">
+
+    <!-- 保存フォーム -->
+    <form method="POST" enctype="multipart/form-data" id="save-form">
         {% csrf_token %}
         <div style="margin-bottom: 15px;">
             <label for="{{ form.title.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.title.label }}：</label>
@@ -27,17 +29,23 @@
                 <img src="{{ book.cover_image.url }}" alt="表紙画像" style="max-width: 200px; height: auto;">
             </div>
         {% endif %}
-
-        <div style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-            <input type="submit" value="保存">
-            <form action="{% url 'picture_book_app:book_delete' book.pk %}" method="POST" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" onclick="return confirm('本当に削除しますか？');" style="padding: 5px 15px;">削除</button>
-            </form>
-            <a href="{% url 'picture_book_app:book_list' %}">
-                <button type="button" style="padding: 10px 20px; font-size: 1rem;">キャンセル</button>
-            </a>
-        </div>
     </form>
+
+    <!-- ボタンを横並びに配置 -->
+    <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
+        <!-- 保存ボタン（formを外に出してsubmit） -->
+        <button type="submit" form="save-form" style="width: 120px; padding: 10px; font-size: 1rem;">保存</button>
+
+        <!-- 削除フォーム -->
+        <form action="{% url 'picture_book_app:book_delete' book.pk %}" method="POST" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" onclick="return confirm('本当に削除しますか？');" style="width: 120px; padding: 10px; font-size: 1rem;">削除</button>
+        </form>
+
+        <!-- キャンセルボタン -->
+        <a href="{% url 'picture_book_app:book_list' %}">
+            <button type="button" style="width: 120px; padding: 10px; font-size: 1rem;">キャンセル</button>
+        </a>
+    </div>
 </div>
 {% endblock %}

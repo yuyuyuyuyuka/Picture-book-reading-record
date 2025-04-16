@@ -95,7 +95,6 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 100%;
   margin-top: 20px;
 }
 
@@ -263,4 +262,29 @@ button, input[type="submit"], a button {
   height: auto; /* 高さを自動調整 */
 }
 
+/* 🔘 ボタンの見た目を明確にする */
+button, input[type="submit"], a button {
+  font-size: 15px;
+  padding: 5px 15px;
+  background-color: #f0f0f0 !important; /* 明るいグレーで背景 */
+  color: black !important;              /* 文字は黒で明確に */
+  border: 1px solid #ccc !important;    /* 枠線をつけて境界を明示 */
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 立体感を少し出す */
+  text-align: center;
+}
+
+/* 🔘 押したときの見た目やフォーカスを整える */
+button:focus, input[type="submit"]:focus, a button:focus {
+  outline: none;
+  box-shadow: none;
+  background-color: #e0e0e0 !important; /* 押したときにちょっと暗くなる */
+}
+/* Bootstrapの btn-danger に対して上書きしないように指定 */
+.btn-danger {
+  background-color: #dc3545 !important;  /* Bootstrap標準の赤 */
+  color: white !important;
+  border: none !important;
+}
 

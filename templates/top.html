@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>お話の足跡</title>
+</head>
+<body>
+    <div class="container" style="text-align: center; margin-top: 50px;">
+        <h1 style="font-size: 2.5em;">作品No.1 お話の足跡</h1>
+        <p style="font-size: 1.2em; line-height: 2;">
+            お話の足跡は、絵本の読み聞かせやお子さまの成長をかんたんに記録・共有できるアプリです。<br>
+            読んだ絵本や感想、表情などを文字・写真・動画で残せます。<br>
+            大切な思い出を家族で振り返ることができます。
+        </p>
+        <!-- 写真ギャラリー -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+            <div style="max-width: 450px;">
+                <img src="{{ MEDIA_URL }}booklist.jpeg" alt="本棚" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+            <div style="max-width: 450px;">
+                <img src="{{ MEDIA_URL }}obentobus.png" alt="お弁当バス" style="width: 100%; height: auto; border-radius: 10px;">
+            </div>
+        </div>
+    
+        <div style="margin-top: 60px;">
+            <h3 class="mb-4">資料リンク</h3>
+            <div style="font-size: 1.1em; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                <a href="{% static 'files/portfolio_murata.pdf' %}" target="_blank">企画書</a>
+                <a href="{% static 'files/gamen_seni_murata.svg' %}" target="_blank">画面遷移図</a>
+                <a href="{% static 'files/er_murata.svg' %}" target="_blank">ER図</a>
+            </div>
+        </div>
+    
+        <div style="margin-top: 30px;">
+            <a href="{% url 'accounts:login' %}" class="btn btn-primary">このアプリにアクセス</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
