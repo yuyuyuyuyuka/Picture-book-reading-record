@@ -342,11 +342,7 @@ def family_update(request, pk):
 
     else:
         form = UserUpdateForm(instance=member)
-        return render(request, 'accounts/family_update.html', context={
-            'form': form,
-            'member':member,
-        })
-        
+
     return render(request, 'accounts/family_update.html', context={
         'form': form,
         'member': member,
