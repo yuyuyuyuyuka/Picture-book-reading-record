@@ -9,7 +9,7 @@
             <select name="child">
                 <option value="">全て</option>
                 {% for child in children %}
-                    <option value="{{ child.id }}" {% if child.id|stringformat:"s" == selected_child %}selected{% endif %}>
+                    <option value="{{ child.id }}" {% if child.id|stringformat:"s" == select_child %}selected{% endif %}>
                         {{ child.name }}
                     </option>
                 {% endfor %}
@@ -21,7 +21,7 @@
         </label>
         <button type="submit">検索</button>
     </form>
-    
+
     <!-- 一覧表 -->
     <table class="table table-bordered">
         <thead>
@@ -52,15 +52,15 @@
      <div style="text-align: center; margin-top: 20px;">
         {% if records.has_previous %}
             <a href="?page={{ records.previous_page_number }}{% if query %}&q={{ query }}{% endif %}
-                {% if selected_child %}&child={{ selected_child }}{% endif %}">前へ
+                {% if select_child %}&child={{ select_child }}{% endif %}">前へ
             </a>
         {% endif %}
 
-        <span>Page{{ records_number }} / {{ records.paginator.num_pages }}</span>
+        <span>Page{{ records.number }} / {{ records.paginator.num_pages }}</span>
 
         {% if records.has_next %}
             <a href="?page={{ records.next_page_number }}{% if query %}&q={{ query }}{% endif %}
-            {% if selected_child %}&child={{ selected_child }}{% endif %}">次へ">
+            {% if select_child %}&child={{ select_child }}{% endif %}">次へ">
             </a>
         {% endif %}
      </div>

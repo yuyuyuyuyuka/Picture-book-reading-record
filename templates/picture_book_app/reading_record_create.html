@@ -4,7 +4,7 @@
     <h1>絵本読み聞かせ記録</h1>
     <form method="POST" enctype="multipart/form-data" class="reading-record-form">
         {% csrf_token %}
-        
+
         <!-- 絵本の名前（1行） -->
         <div class="form-row">
             <label for="{{ form.book.id_for_label }}">{{ form.book.label }}</label>
@@ -49,13 +49,19 @@
             <div>
                 <label for="{{ form.video.id_for_label }}">{{ form.video.label }}</label>
                 {{ form.video }}
+                <p style="font-size: 0.85em; color: gray; margin: 3px 0 0 0;">
+                    ※ 動画ファイルは最大5MBまでアップロードできます。
+                </p>
             </div>
         </div>
 
 
         <!-- 簡単記録（1行） -->
         <div class="form-row">
-            <label for="{{ form.reading_comments.id_for_label }}">{{ form.reading_comments.label }}</label>
+            <label for="{{ form.reading_comments.id_for_label }}">
+                {{ form.reading_comments.label }}<br>
+                <span style="font-size: 0.85em; color: gray;">※ 簡単記録は最大3つまで選べます</span>
+            </label>
             {{ form.reading_comments }}
         </div>
 

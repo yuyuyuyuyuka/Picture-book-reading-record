@@ -4,7 +4,7 @@ from django.utils import timezone
 
 # 子どもの登録画面
 class ChildForm(forms.ModelForm):
-    
+
     class Meta:
         model = Child
         fields = ['name', 'birthday']
@@ -33,7 +33,7 @@ class BookForm(forms.ModelForm):
 
 # 絵本の読み聞かせ記録登録画面
 class ReadingRecordForm(forms.ModelForm):
-    
+
     class Meta:
         model = ReadingRecord
         fields = [
@@ -59,13 +59,13 @@ class ReadingRecordForm(forms.ModelForm):
             'review': forms.Textarea(attrs={'rows': 2}),
             'reading_comments': forms.SelectMultiple(attrs={
                 'class': 'form-select',
-                'multiple': 'multiple', 
+                'multiple': 'multiple',
                 'aria-label': '簡単記録を選択',
-                'style': 'height: 300px;',
+                'style': 'height: 200px; font-size: 1rem; padding: 8px;',
             }),
             'book_status': forms.RadioSelect(attrs={'class': 'form-check-input'}),
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['date'].initial = timezone.now().date()
