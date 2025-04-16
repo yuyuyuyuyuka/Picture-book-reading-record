@@ -140,16 +140,13 @@ AUTH_USER_MODEL = 'accounts.User'
 # メール送信の設定
 from decouple import config
 
-EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+EMAIL_BACKEND = "sendgrid_django.mail.SendgridBackend"
 SENDGRID_API_KEY = config("SENDGRID_API_KEY")
 
 SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 SENDGRID_ECHO_TO_STDOUT = True
 
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-
-
-
 
 
 
