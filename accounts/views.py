@@ -71,7 +71,7 @@ def send_password_reset_email(to_email_address, reset_url):
     subject = '【お話の足跡】パスワード再設定のお知らせ'
     content = Content("text/plain", f"以下のリンクからパスワードを再設定してください。\n\n{reset_url}")
 
-    message = Mail(from_email=from_email, to_email=to_email, subject=subject)
+    message = Mail(from_email=from_email, to_emails=to_email, subject=subject)
     message.add_content(content)
 
     # メール送信
