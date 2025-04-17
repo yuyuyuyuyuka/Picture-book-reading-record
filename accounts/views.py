@@ -71,8 +71,10 @@ def send_password_reset_email(to_email_address, reset_url):
     subject = '【お話の足跡】パスワード再設定のお知らせ'
     content = Content("text/plain", f"以下のリンクからパスワードを再設定してください。\n\n{reset_url}")
 
+    # 正しい形式で Mail を初期化
     message = Mail(from_email, to_email, subject, content)
 
+    # メール送信
     response = sg.send(message)
     return response
 
