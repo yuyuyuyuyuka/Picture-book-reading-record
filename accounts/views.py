@@ -20,7 +20,7 @@ import logging
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth import update_session_auth_hash
-import sendgrid
+from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email, Content
 
 
@@ -64,17 +64,16 @@ def user_logout(request):
 
 # SendGrid Web API で送信
 def send_password_reset_email(to_email_address, reset_url):
-    sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+    sg = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
 
-    from_email = Email(settings.DEFAULT_FROM_EMAIL)
-    to_email = Email(to_email_address)
-    subject = '【お話の足跡】パスワード再設定のお知らせ'
-    content = Content("text/plain", f"以下のリンクからパスワードを再設定してください。\n\n{reset_url}")
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=to_email_address,
+        subject='【お話の足跡】パスワード再設定のお知らせ',
+        plain_text_content=f"以下のリンクからパスワードを再設定してください。\n\n{reset_url}"
+    )
 
-    message = Mail(from_email=from_email, to_email=to_email, subject=subject)
-    message.add_content(content)  # ← ここがポイント！
-
-    response = sg.send(message)
+    response = sg.send(message)  # ← send() でOKです！
     return response
 
 # パスワード再設定
