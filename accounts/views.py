@@ -21,7 +21,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth import update_session_auth_hash
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail, Email, Content
+from sendgrid.helpers.mail import Mail, Email, Content, To, From 
 
 
 
@@ -66,13 +66,13 @@ def user_logout(request):
 def send_password_reset_email(to_email_address, reset_url):
     sg = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
 
-    from_email = Email(settings.DEFAULT_FROM_EMAIL)
-    to_email = Email(to_email_address)
+    from_email = From(settings.DEFAULT_FROM_EMAIL)
+    to_email = To(to_email_address)
     subject = '【お話の足跡】パスワード再設定のお知らせ'
     content = Content("text/plain", f"以下のリンクからパスワードを再設定してください。\n\n{reset_url}")
 
-    # 正しい形式で Mail を初期化
-    message = Mail(from_email, to_email, subject, content)
+    message = Mail(from_email=from_email, to_email=to_email, subject=subject)
+    message.add_content(content)
 
     # メール送信
     response = sg.send(message)
