@@ -66,12 +66,12 @@ def user_logout(request):
 def send_password_reset_email(to_email_address, reset_url):
     sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
 
-    from_email = Email(settings.DEFAULT_FROM_EMAIL)          # ← Emailオブジェクト
-    to_email = Email(to_email_address)                       # ← Emailオブジェクト ←ここが重要！
+    from_email = Email(settings.DEFAULT_FROM_EMAIL)         # Emailオブジェクト
+    to_email = Email(to_email_address)                      # ← ここ重要！
     subject = '【お話の足跡】パスワード再設定のお知らせ'
     content = Content("text/plain", f"以下のリンクからパスワードを再設定してください。\n\n{reset_url}")
 
-    message = Mail(from_email, to_email, subject, content)   # ← 全部オブジェクトで渡す
+    message = Mail(from_email, to_email, subject, content)
     response = sg.send(message)
     return response
 
