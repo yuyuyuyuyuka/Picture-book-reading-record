@@ -23,6 +23,7 @@ from django.contrib.auth import update_session_auth_hash
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Content, To, From
 from django.template.loader import render_to_string
+from django.http import HttpResponseForbidden
 
 
 
@@ -360,35 +361,37 @@ def family_list(request):
 
 
 # 家族編集画面
-@login_required
-def family_update(request, pk):
-    member = get_object_or_404(User, pk=pk)  #このUserは家族のことを指す
+# @login_required
+# def family_update(request, pk):
+#     member = get_object_or_404(User, pk=pk)  #このUserは家族のことを指す
 
-    if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance=member)  #記入フォームが同じなのでUserUpdateForm使える
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:family_list')
+#     if request.method == 'POST':
+#         form = UserUpdateForm(request.POST, instance=member)  #記入フォームが同じなのでUserUpdateForm使える
+#         if form.is_valid():
+#             form.save()
+#             return redirect('accounts:family_list')
 
-    else:
-        form = UserUpdateForm(instance=member)
+#     else:
+#         form = UserUpdateForm(instance=member)
 
-    return render(request, 'accounts/family_update.html', context={
-        'form': form,
-        'member': member,
-    })
+#     return render(request, 'accounts/family_update.html', context={
+#         'form': form,
+#         'member': member,
+#     })
 
 # 家族削除
 @login_required
 def family_delete(request, pk):
     member = get_object_or_404(User, pk=pk)
+    
+    if member == request.user:
+        return HttpResponseForbidden('自分自身は削除できません')
 
     if request.method == 'POST':
         member.delete()
         return redirect('accounts:family_list')
-    return render(request, 'accounts/family_update.html', context={
-        'member':member,
-    })
+    
+    return redirect('accounts:family_list')
 
 # トップ画面（ポートフォリオ）
 def top(request):

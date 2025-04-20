@@ -18,7 +18,7 @@ urlpatterns = [
     path('family_list/',views.family_list, name='family_list'),
     path('profile_update/', views.profile_update, name='profile_update'),
     path('password_change/', views.password_change, name='password_change'),
-    path('family_update/<int:pk>/', views.family_update, name='family_update'),
+    # path('family_update/<int:pk>/', views.family_update, name='family_update'),
     path('family_delete/<int:pk>/', views.family_delete, name='family_delete'),
     path('', views.top, name='top'),
 ]

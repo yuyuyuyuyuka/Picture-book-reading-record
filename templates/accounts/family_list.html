@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 <div class="container">
     <h1>家族一覧</h1>
@@ -14,16 +13,47 @@
         <tbody>
             {% for member in members %}
                 <tr>
-                    <td>{{ member.username }}</td> <!-- メンバーの名前 -->
-                    <td><a href="{% url 'accounts:family_update' member.pk %}" style="padding: 5px 10px; background-color: #D3D3D3; color: black; text-decoration: none; border-radius: 4px;">編集</a>
+                    <td>{{ member.username }}</td>
+                    <td>
+                        {% if member != user %}
+                            <!-- 削除ボタン -->
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ member.pk }}">
+                                削除
+                            </button>
+
+                            <!-- モーダル -->
+                            <div class="modal fade" id="deleteModal{{ member.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ member.pk }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel{{ member.pk }}">確認</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{ member.username }}さんを本当に削除しますか？
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="{% url 'accounts:family_delete' member.pk %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                                                <button type="submit" class="btn btn-danger">削除する</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <span class="text-muted">（自分）</span>
+                        {% endif %}
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="4">家族メンバーがいません。</td>
+                    <td colspan="2">家族メンバーがいません。</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 {% endblock %}
+
