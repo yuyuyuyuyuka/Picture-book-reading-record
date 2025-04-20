@@ -375,7 +375,12 @@ button, input[type="submit"], a button {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-
+.reading-record-container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #fff;
+}
 
 
 /* 🔘 ボタンの見た目を明確にする */

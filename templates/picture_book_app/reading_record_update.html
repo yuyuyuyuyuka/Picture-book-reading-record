@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="centered-container">
+<div class="reading-record-container">
     <h1>絵本読み聞かせ記録編集</h1>
     <form method="POST" enctype="multipart/form-data" class="reading-record-form">
         {% csrf_token %}
@@ -66,7 +66,9 @@
             {{ form.review }}
         </div>
 
-        <input type="submit" value="保存">
+        <div style="text-align: center; margin-top: 30px;">
+            <input type="submit" value="保存">
+        </div>
     </form>
 </div>
 {% endblock %}
