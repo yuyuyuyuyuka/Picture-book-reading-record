@@ -181,7 +181,7 @@ def book_detail(request, pk):
 @login_required
 def reading_record_create(request):
     if request.method == 'POST':
-        form = ReadingRecordForm(request.POST, request.FILES)
+        form = ReadingRecordForm(request.POST, request.FILES, user=request.uer)
         if form.is_valid():
             record = form.save(commit=False)
             record.family_id = request.user.family_id
@@ -190,7 +190,7 @@ def reading_record_create(request):
             return redirect('picture_book_app:reading_record_list')
 
     else:
-        form = ReadingRecordForm()
+        form = ReadingRecordForm(user=request.user)
 
     return render(request, 'picture_book_app/reading_record_create.html', context={
         'form': form,

@@ -67,5 +67,12 @@ class ReadingRecordForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  #ログインしているuserを取り出す
         super().__init__(*args, **kwargs)
+        
         self.fields['date'].initial = timezone.now().date()
+        
+        if user:
+            family = user.family_id
+            self.fields['book'].queryset = Book.objects.filter(family_id=family)
+            self.fields['child'].queryset = Child.objects.filter(family_id=family)
