@@ -58,11 +58,25 @@
 
         <!-- 簡単記録（1行） -->
         <div class="form-row">
-            <label for="{{ form.reading_comments.id_for_label }}">
-                {{ form.reading_comments.label }}<br>
-                <span style="font-size: 0.85em; color: gray;">※ 簡単記録は最大3つまで選べます</span>
-            </label>
-            {{ form.reading_comments }}
+            <!-- ラベルを1行で表示 -->
+            <div style="font-weight: bold; margin-bottom: 3px;">
+                <label for="{{ form.reading_comments.id_for_label }}">簡単記録：</label>
+            </div>
+        
+            <!-- マルチセレクト -->
+            <div>
+                {{ form.reading_comments }}
+        
+                <!-- 注意書き（左下に揃えて表示） -->
+                <div style="margin-top: 5px; text-align: left;">
+                    <p style="font-size: 0.85em; color: gray; margin: 0;">
+                        ※ 簡単記録は最大3つまで選べます。
+                    </p>
+                    <p style="font-size: 0.85em; color: gray; margin: 0;">
+                        ※ 複数選択する場合は、WindowsではCtrlキー、MacではCommandキーを押しながらクリックしてください。
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- 絵本の感想（1行） -->
