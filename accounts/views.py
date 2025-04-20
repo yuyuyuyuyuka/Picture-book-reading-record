@@ -65,6 +65,10 @@ def user_logout(request):
 
 # SendGrid Web API で送信
 def send_password_reset_email(to_email_address, reset_url):
+    print(">>> メール送信処理開始")
+    print(">>> 送信先：", to_email_address)
+    print(">>> URL：", reset_url)
+    
     sg = SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
 
     from_email = From(settings.DEFAULT_FROM_EMAIL)
@@ -72,9 +76,14 @@ def send_password_reset_email(to_email_address, reset_url):
     subject = '【お話の足跡】パスワード再設定のお知らせ'
 
     # テンプレートから本文を読み込む
-    content_text = render_to_string('accounts/password_reset_email.txt', context={
-        'reset_url': reset_url,
-    })
+    try:
+        content_text = render_to_string('accounts/password_reset_email.txt', context={
+            'reset_url': reset_url,
+        })
+    except Exception as e:
+        print(">>> テンプレート読み込みエラー：", e)
+        raise
+
     content = Content("text/plain", content_text)
 
     message = Mail(from_email=from_email, to_emails=to_email, subject=subject)
