@@ -98,6 +98,20 @@
   margin-top: 20px;
 }
 
+.centered-container .email-note {
+  list-style-type: disc;        /* ・のスタイル */
+  padding-left: 1.5em;          /* 左に余白を作って、・と文字を自然に並べる */
+  text-align: left;             /* 左寄せで揃える */
+  font-size: 0.9em;
+  color: gray;
+  line-height: 1.6;
+  margin-top: 1em;
+}
+
+.centered-container .email-note li {
+  margin-bottom: 0.5em;         /* 各行の余白を整える */
+}
+
 /* その他のフォーム要素のスタイル */
 .form-group {
   margin-bottom: 1em;
