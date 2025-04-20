@@ -181,7 +181,7 @@ def book_detail(request, pk):
 @login_required
 def reading_record_create(request):
     if request.method == 'POST':
-        form = ReadingRecordForm(request.POST, request.FILES, user=request.uer)
+        form = ReadingRecordForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
             record = form.save(commit=False)
             record.family_id = request.user.family_id
@@ -202,7 +202,7 @@ def reading_record_list(request):
     child_id = request.GET.get('child')  #子どもの絞り込み
     query = request.GET.get('q')  #絵本のフリーワード検索
 
-    records = ReadingRecord.objects.filter(family_id=request.user.family_id)
+    records = ReadingRecord.objects.filter(family_id=request.user.family_id,)
 
     if child_id:
         records = records.filter(child__id=child_id)
@@ -226,8 +226,8 @@ def reading_record_list(request):
 
 # 読み聞かせ記録の詳細画面
 @login_required
-def reading_record_detail(request, pk):
-    record = get_object_or_404(ReadingRecord, pk=pk, family_id=request.user.family_id)
+def reading_record_detail(request, pk, ):
+    record = get_object_or_404(ReadingRecord, pk=pk, family_id=request.user.family_id,)
     return render(request, 'picture_book_app/reading_record_detail.html', context={
         'record': record,
     })
@@ -239,13 +239,13 @@ def reading_record_update(request,pk):
     record = get_object_or_404(ReadingRecord, pk=pk, family_id=request.user.family_id)
 
     if request.method == 'POST':
-        form = ReadingRecordForm(request.POST, request.FILES, instance=record)
+        form = ReadingRecordForm(request.POST, request.FILES, instance=record, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('picture_book_app:reading_record_detail', pk=record.pk)
 
     else:
-        form = ReadingRecordForm(instance=record)
+        form = ReadingRecordForm(instance=record, user=request.user)
     return render(request, 'picture_book_app/reading_record_update.html', context={
         'form': form,
         'record': record,
