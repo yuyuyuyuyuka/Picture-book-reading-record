@@ -74,9 +74,9 @@
         <button type="button">戻る</button>
       </a>
       <a href="{% url 'picture_book_app:reading_record_update' record.pk %}">
-        <button type="button">編集</button>
+        <button type="button" class="btn-edit">編集</button>
       </a>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">削除</button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn-danger">削除</button>
     </div>
 
     <!-- 削除モーダル -->

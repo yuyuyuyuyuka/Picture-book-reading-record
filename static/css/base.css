@@ -408,4 +408,45 @@ button:focus, input[type="submit"]:focus, a button:focus {
   color: white !important;
   border: none !important;
 }
+nav.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
 
+body {
+  padding-top: 60px;
+}
+
+input[type="submit"].btn-primary,
+button.btn-primary {
+  background-color: #007bff !important;
+  color: white !important;
+  border: none !important;
+}
+
+input[type="submit"].btn-danger,
+button.btn-danger {
+  background-color: #dc3545 !important;
+  color: white !important;
+  border: none !important;
+}
+
+input[type="submit"].btn-secondary,
+button.btn-secondary {
+  background-color: #6c757d !important;
+  color: white !important;
+  border: none !important;
+}
+/* 淡い青：編集・追加・変更共通 */
+.btn-edit {
+  background-color: #66b2ff !important; /* 淡い青 */
+  color: white !important;
+  border: none !important;
+  padding: 6px 16px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}

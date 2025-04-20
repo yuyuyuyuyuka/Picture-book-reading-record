@@ -5,7 +5,7 @@
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="本棚" style="margin-left: 80px; padding: 10px 20px;">
+        <input type="submit" value="本棚" style="margin-left: 80px; padding: 10px 20px;" class="btn-primary">
     </form>
 </div>
 {% endblock %}

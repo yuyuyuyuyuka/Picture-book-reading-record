@@ -5,7 +5,7 @@
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="登録">
+        <input type="submit" value="登録" class="btn-primary">
         <a href="{% url 'accounts:password_change' %}"><button type="button">パスワードを変更する</button></a>
         <a href="{% url 'accounts:mypage' %}">
             <button type="button">キャンセル</button>

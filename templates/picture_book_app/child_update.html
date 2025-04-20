@@ -22,13 +22,13 @@
         <!-- 保存ボタン -->
         <form method="POST">
             {% csrf_token %}
-            <input type="submit" value="保存" style="padding: 10px 20px;">
+            <input type="submit" value="保存" style="padding: 10px 20px;" class="btn-primary">
         </form>
 
         <!-- 削除ボタン -->
         <form action="{% url 'picture_book_app:child_delete' child.pk %}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
             {% csrf_token %}
-            <button type="submit" style="padding: 10px 20px;">削除</button>
+            <button type="submit" style="padding: 10px 20px;" class="btn-danger">削除</button>
         </form>
     </div>
 </div>
