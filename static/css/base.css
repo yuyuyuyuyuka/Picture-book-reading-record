@@ -275,6 +275,108 @@ button, input[type="submit"], a button {
   max-width: 100%; /* メディアコンテンツの最大幅を100%に設定 */
   height: auto; /* 高さを自動調整 */
 }
+.container-detail {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.record-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.record-table th, .record-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+  background-color: #f9f9f9;
+}
+
+.record-table th {
+  width: 150px;
+  background-color: #eee;
+  font-weight: bold;
+}
+
+.review-text {
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  white-space: pre-wrap;
+}
+
+.media-section {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.photo, .video {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.button-area {
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  gap: 20px;
+  margin-top: 30px;
+}
+.media-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px; /* 写真と動画の間隔 */
+  flex-wrap: wrap; /* スマホでは縦並びに */
+  margin-bottom: 30px;
+}
+
+.media-box {
+  flex: 1 1 40%;
+  text-align: center;
+}
+
+.media-item {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.media-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px 1fr; /* ラベル＋コンテンツ ×2 */
+  gap: 20px;
+  align-items: start;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.media-label {
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding-top: 10px;
+  text-align: right;
+}
+
+.media-item-box {
+  text-align: center;
+}
+
+.media-item {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
 
 /* 🔘 ボタンの見た目を明確にする */
 button, input[type="submit"], a button {

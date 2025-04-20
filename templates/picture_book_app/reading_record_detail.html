@@ -1,86 +1,102 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="centered-container">
+<div class="container">
     <h1 style="text-align: left;">読み聞かせ記録の詳細</h1>
 
-    <!-- 1行目 -->
-    <p><strong>絵本：</strong>{{ record.book.title }}</p>
-    
-    <!-- 2行目 -->
-    <p>
-        <strong>日付：</strong>{{ record.date }}
-        <strong>子ども：</strong>{{ record.child.name }}
-        <strong>読んだ回数：</strong>{{ record.read_count }}回
-    </p>
+    <div class="form-row">
+        <label>絵本：</label>
+        <div>{{ record.book.title }}</div>
+    </div>
 
-    <!-- 3行目 -->
-    <p>
-        <strong>所有状況：</strong>{{ record.get_book_status_display }}
-        <strong>簡単記録：</strong>
-        {% for comment in record.reading_comments.all %}
-            {{ comment.comment }}
-                {% if not forloop.last %},{% endif %}
-        {% empty %}なし
-        {% endfor %}
-    </p>
+    <div class="form-row">
+        <label>日付：</label>
+        <div>{{ record.date }}</div>
+    </div>
 
-    <!-- 4行目 -->
-    <p>
-        <strong>絵本の感想や子の様子・反応記入：</strong><br>
-        {{ record.review|linebreaksbr }}
-    </p>
+    <div class="form-row">
+        <label>子ども：</label>
+        <div>{{ record.child.name }}</div>
+    </div>
 
-    <!-- 5行目 -->
-    <div style="display: flex; gap: 20px; margin-top: 10px;">
-        {% if record.photo %}
+    <div class="form-row">
+        <label>読んだ回数：</label>
+        <div>{{ record.read_count }} 回</div>
+    </div>
+
+    <div class="form-row">
+        <label>所有状況：</label>
+        <div>{{ record.get_book_status_display }}</div>
+    </div>
+
+    <div class="form-row">
+        <label>簡単記録：</label>
         <div>
-            <strong>写真：</strong><br>
-            <img src="{{ record.photo.url }}" alt="写真：" style="max-width: 300px;">
+            {% for comment in record.reading_comments.all %}
+                {{ comment.comment }}{% if not forloop.last %}, {% endif %}
+            {% empty %}なし
+            {% endfor %}
         </div>
-        {% endif %}
-        {% if record.video %}
-        <div>
-            <strong>動画：</strong><br>
-            <video controls style="max-width: 300px;">
+    </div>
+
+    <div class="form-row-review">
+        <label>絵本の感想や子の様子・反応記入：</label>
+        <div>{{ record.review|linebreaksbr }}</div>
+    </div>
+
+    {% if record.photo or record.video %}
+    <div class="form-row media-row">
+        <div class="media-label">写真：</div>
+        <div class="media-item-box">
+            {% if record.photo %}
+            <img src="{{ record.photo.url }}" alt="写真" class="media-item">
+            {% else %}
+            <p>写真はありません。</p>
+            {% endif %}
+        </div>
+
+        <div class="media-label">動画：</div>
+        <div class="media-item-box">
+            {% if record.video %}
+            <video controls class="media-item">
                 <source src="{{ record.video.url }}">
-                動画を再生できません。
+                お使いのブラウザは video タグをサポートしていません。
             </video>
+            {% else %}
+            <p>動画はありません。</p>
+            {% endif %}
         </div>
-        {% endif %}
+    </div>
+    {% endif %}
+
+
+    <div class="button-area">
+      <a href="{% url 'picture_book_app:reading_record_list' %}">
+        <button type="button">戻る</button>
+      </a>
+      <a href="{% url 'picture_book_app:reading_record_update' record.pk %}">
+        <button type="button">編集</button>
+      </a>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">削除</button>
     </div>
 
-    <!-- 6行目 -->
-    <div style="margin-top: 20px; text-align: right; display: flex; justify-content: right; gap: 10px;"">
-        <a href="{% url 'picture_book_app:reading_record_list' %}">
-            <button type="button" style="padding: 10px 20px; font-size: 1rem;">戻る</button>
-        </a>
-        <a href="{% url 'picture_book_app:reading_record_update' record.pk %}">
-            <button type="button" style="padding: 10px 20px; font-size: 1rem;">編集</button>
-        </a>
-        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" 
-            style="padding: 10px 20px; font-size: 1rem;">削除
-        </button>
-    </div>
-    <!-- モーダル本体 -->
+    <!-- 削除モーダル -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="deleteModalLabel">確認</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">確認</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                </div>
+                <div class="modal-body">本当に削除しますか？</div>
+                <div class="modal-footer">
+                    <form action="{% url 'picture_book_app:reading_record_delete' record.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                        <button type="submit" class="btn btn-danger">削除する</button>
+                    </form>
+                </div>
             </div>
-            <div class="modal-body">
-              本当に削除しますか？
-            </div>
-            <div class="modal-footer">
-              <form action="{% url 'picture_book_app:reading_record_delete' record.pk %}" method="POST">
-                {% csrf_token %}
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                <button type="submit" class="btn btn-danger">削除する</button>
-              </form>
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
 </div>
 {% endblock %}
