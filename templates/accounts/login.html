@@ -2,6 +2,14 @@
 {% block content %}
 <div class="centered-container">
   <h1>お話の足跡</h1>
+
+  <!-- メッセージ表示 -->
+   {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+
   <form method="POST">
       {% csrf_token %}
       <div class="form-group">
