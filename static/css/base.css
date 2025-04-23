@@ -78,10 +78,19 @@
 }
 
 .form-row-review {
+  display: flex; 
+  align-items: flex-start; 
+  margin-top: 10px;
+}
+.form-row-review {
   display: block; 
   margin-top: 10px; 
   text-align: left; 
-  font-weight: bold;
+  font-weight: normal; 
+}
+
+.form-row-review label {
+  font-weight: bold; 
 }
 .form-row-review input, .form-row-review textarea {
   width: 100%; 
@@ -457,4 +466,64 @@ button.btn-secondary {
   background-color: #fff;
   margin-top: 10px;
   line-height: 1.6;
+}
+.link-hover {
+  font-size: 1.1rem;
+  text-decoration: none;
+  color: #007BFF;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+
+.link-hover:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+button:hover, input[type="submit"]:hover, a button:hover {
+  background-color: #e0e0e0; 
+  color: #333; 
+  border-color: #999; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+input[type="submit"].btn-primary:hover, button.btn-primary:hover {
+  background-color: #0056b3 !important; 
+}
+
+input[type="submit"].btn-danger:hover, button.btn-danger:hover {
+  background-color: #c82333 !important;
+}
+
+input[type="submit"].btn-secondary:hover, button.btn-secondary:hover {
+  background-color: #5a6268 !important; 
+}
+
+.btn-edit:hover {
+  background-color: #3399ff !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+button, input[type="submit"], a button {
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* ホバー時の効果を滑らかに */
+}
+
+.book-detail a:hover {
+  text-decoration: underline;
+}
+
+button:focus, input[type="submit"]:focus, a button:focus {
+  outline: none;
+  box-shadow: none;
+}
+.hover-link {
+  text-decoration: none;
+  color: inherit; 
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.hover-link:hover {
+  color: #0056b3;
+  text-decoration: underline; 
 }

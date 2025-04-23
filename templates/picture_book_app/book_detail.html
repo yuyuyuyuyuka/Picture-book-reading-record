@@ -2,23 +2,32 @@
 {% block content %}
 <div class="centered-container">
     <h1>絵本の詳細</h1>
-    <a href="{% url 'picture_book_app:book_list' %}" style="text-decoration: none; font-size: 1.2em;">← 本棚に戻る</a>
+    <a href="{% url 'picture_book_app:book_list' %}" style="text-decoration: none; font-size: 1.2em; margin-bottom: 20px;">← 本棚に戻る</a> <!-- ここにmargin-bottomを追加 -->
 
     <div style="display: flex; margin-top: 20px; gap: 30px;">
         <!-- 左側：表紙 -->
         <div style="flex: 1;">
             {% if book.cover_image %}
-                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100%; height: auto; border-radius: 10px;">
+                <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 300px; height: auto; border-radius: 10px;">
             {% else %}
                 <p>[画像なし]</p>
             {% endif %}
         </div>
 
-        <!-- 右側：本の情報 -->
-        <div style="flex: 2; margin-top: 60px;">
-            <p class="book-detail"><strong>絵本のタイトル：</strong>{{ book.title }}</p>
-            <p class="book-detail"><strong>著者：</strong><a href="{% url 'picture_book_app:book_list' %}?author={{ book.author }}">{{ book.author }}</a></p>
-            <p class="book-detail"><strong>出版社：</strong><a href="{% url 'picture_book_app:book_list' %}?publisher={{ book.publisher }}">{{ book.publisher }}</a></p>
+        <!-- 右側：本の情報 (固定幅) -->
+        <div style="flex-shrink: 0; width: 300px; margin-left: 30px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <p class="book-detail" style="white-space: nowrap;"><strong>絵本のタイトル：</strong></p>
+                <p class="book-detail" style="text-align: left; flex-grow: 1;">{{ book.title }}</p>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <p class="book-detail" style="white-space: nowrap;"><strong>著者：</strong><a href="{% url 'picture_book_app:book_list' %}?author={{ book.author }}" class="hover-link"></p>
+                <p class="book-detail" style="text-align: left; flex-grow: 1;">{{ book.author }}</a></p>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <p class="book-detail" style="white-space: nowrap;"><strong>出版社：</strong><a href="{% url 'picture_book_app:book_list' %}?publisher={{ book.publisher }}" class="hover-link"></p>
+                <p class="book-detail" style="text-align: left; flex-grow: 1;">{{ book.publisher }}</a></p>
+            </div>
         </div>
     </div>
 </div>
