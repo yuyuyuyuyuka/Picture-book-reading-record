@@ -464,7 +464,7 @@ button.btn-secondary {
   margin: 0 auto;
   padding: 2em;
   background-color: #fff;
-  margin-top: 10px;
+  margin-top: 0px;
   line-height: 1.6;
 }
 .link-hover {
@@ -526,4 +526,34 @@ button:focus, input[type="submit"]:focus, a button:focus {
 .hover-link:hover {
   color: #0056b3;
   text-decoration: underline; 
+}
+
+input[type="submit"].login-button {
+  background-color: #007bff !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.6em 1.5em !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+}
+
+input[type="submit"].login-button:hover {
+  background-color: #0056b3 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+button.search-button {
+  background-color: #007bff !important; /* 青色 */
+  color: white !important;
+  border: 1px solid #007bff !important; /* ボーダー色も青 */
+  padding: 5px 10px !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  border-radius: 5px !important;
+  transition: background-color 0.3s ease !important;
+}
+
+/* ホバー時の色変更 */
+button.search-button:hover {
+  background-color: #0056b3 !important; /* 少し暗くなる */
 }

@@ -71,4 +71,17 @@
         </div>
     </form>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const readingComments = document.querySelector('select[name="reading_comments"]');
+        
+        readingComments.addEventListener('change', function() {
+            const selectedOptions = Array.from(readingComments.selectedOptions);
+            if (selectedOptions.length > 3) {
+                alert("簡単記録は最大3つまで選べます。");
+                readingComments.value = ''; // 最後の選択を解除する
+            }
+        });
+    });
+</script>
 {% endblock %}
