@@ -1,6 +1,7 @@
 from django import forms
 from .models import Child, Book, ReadingRecord
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 # 子どもの登録画面
 class ChildForm(forms.ModelForm):
@@ -76,3 +77,10 @@ class ReadingRecordForm(forms.ModelForm):
             family = user.family_id
             self.fields['book'].queryset = Book.objects.filter(family_id=family)
             self.fields['child'].queryset = Child.objects.filter(family_id=family)
+    
+    # マルチセレクト選択3つ
+    def clean_reading_comments(self):
+        reading_comments = self.cleaned_data.get('reading_comments')
+        if len(reading_comments) > 3:
+            raise ValidationError("簡単記録は最大3つまで選べます。")
+        return reading_comments

@@ -5,7 +5,7 @@
 
     <!-- 検索フォーム -->
     <form method="GET" action="{% url 'picture_book_app:book_list' %}" style="margin-bottom: 20px;">
-        <input type="text" name="q" placeholder="ﾀｲﾄﾙ・著者・出版社を入力" value="{{ query|default_if_none:'' }}">
+        <input type="text" name="q" placeholder="ﾀｲﾄﾙ/著者/出版社を入力" value="{{ query|default_if_none:'' }}">
         <button type="submit">検索</button>
     </form>
 
