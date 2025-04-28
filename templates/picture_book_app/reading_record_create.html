@@ -72,9 +72,6 @@
                     <p style="font-size: 0.85em; color: gray; margin: 0;">
                         ※ 簡単記録は最大3つまで選べます。
                     </p>
-                    <p style="font-size: 0.85em; color: gray; margin: 0;">
-                        ※ 複数選択する場合は、WindowsではCtrlキー、MacではCommandキーを押しながらクリックしてください。
-                    </p>
                 </div>
             </div>
         </div>
@@ -90,17 +87,27 @@
     </form>
 </div>
 
+<!-- ctrlを使わず選択できるように -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const readingComments = document.querySelector('select[name="reading_comments"]');
-        
-        readingComments.addEventListener('change', function() {
-            const selectedOptions = Array.from(readingComments.selectedOptions);
-            if (selectedOptions.length > 3) {
-                alert("簡単記録は最大3つまで選べます。");
-                readingComments.value = ''; // 最後の選択を解除する
-            }
-        });
+    document.addEventListener("DOMContentLoaded", function(){
+        const readingComments = document.getElementById("{{ form.reading_comments.id_for_label }}");
+
+        if (readingComments){
+            readingComments.addEventListener("mousedown", function(e){
+                e.preventDefault();
+                const option = e.target;
+                if (option.tagName == "OPTION"){
+                    option.selected =! option.selected;
+
+                    // 3しか選択できないようにする（4つ目アラート）
+                    const selectedOptions = Array.from(readingComments.selectedOptions);
+                    if (selectedOptions.length > 3){
+                        alert("簡単記録は最大3つまで選べます。");
+                        option.selected = false;
+                    }
+                }
+            });
+        }
     });
 </script>
 {% endblock %}
