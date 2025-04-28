@@ -6,7 +6,7 @@
         <label for="child_id" class="child-label">子ども：</label>
             <select name="child_id" class="child-select">
                 {% for child in children %}
-                    <option value="{{ child.id }}" {% if selected_child_id == child.id %}selected{% endif %}>
+                <option value="{{ child.id }}" {% if child.id|stringformat:"s" == selected_child_id %}selected{% endif %}>
                         {{ child.name }}
                     </option>
                 {% endfor %}
@@ -45,7 +45,7 @@
     <!-- ページネーション -->
      <div class="pagination">
         {% if page_obj.has_previous %}
-            <a href="?page{{ page_obj.previous_page_number }}
+            <a href="?page={{ page_obj.previous_page_number }}
                 {% if selected_child_id %}&child_id={{ selected_child_id }}{% endif %}">前へ
             </a>
         {% endif %}
@@ -53,7 +53,7 @@
         Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
 
         {% if page_obj.has_next %}
-            <a href="?page{{ page_obj.next_page_number }}
+            <a href="?page={{ page_obj.next_page_number }}
                 {% if selected_child_id %}&child_id={{ selected_child_id }}{% endif %}">次へ
             </a>
         {% endif %}
