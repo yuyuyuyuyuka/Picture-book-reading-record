@@ -35,6 +35,16 @@
                 <button style="margin: 5px;">詳細</button>
             </a>
         </div>
+        {% empty %}
+            {% if query %}
+                <div style="text-align:center; margin-top: 30px; font-size: 1.2em;">
+                    検索結果がありませんでした。
+                </div>
+            {% else %}
+                <div style="text-align:center; margin-top: 30px; font-size: 1.2em; white-space: nowrap;">
+                    まだ本棚に本が登録されていません。
+                </div>
+            {% endif %}
         {% endfor %}
         </div>
     </div>
