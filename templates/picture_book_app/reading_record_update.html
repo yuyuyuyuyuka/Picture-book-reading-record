@@ -29,26 +29,41 @@
 
         <!-- 所有状況、写真、動画（1行） -->
         <div class="form-row" style="display: flex; align-items: flex-start; gap: 10px;">
-            <label style="font-weight: bold; padding-top: 5px;">{{ form.book_status.label }}</label>
             <div>
+                <label style="font-weight: bold;">{{ form.book_status.label }}</label><br>
                 {% for radio in form.book_status %}
-                    <div class="form-check">
+                    <div class="form-check" style="margin-left: 10px;">
                         {{ radio.tag }}
                         <label class="form-check-label" for="{{ radio.id_for_label }}">
                             {{ radio.choice_label }}
-                        </label>
+                        </label><br>
                     </div>
                 {% endfor %}
             </div>
 
             <div>
-                <label for="{{ form.photo.id_for_label }}">{{ form.photo.label }}</label>
-                {{ form.photo }}
+                <label for="{{ form.photo.id_for_label }}">{{ form.photo.label }}</label><br>
+                <input type="file" name="photo" id="{{ form.photo.id_for_label }}">
+                
+                {% if record.photo %}
+                    <div style="margin-top: 10px;">
+                        <img src="{{ record.photo.url }}" alt="現在の写真" style="max-width: 150px; height: auto;">
+                    </div>
+                {% endif %}
             </div>
 
             <div>
-                <label for="{{ form.video.id_for_label }}">{{ form.video.label }}</label>
-                {{ form.video }}
+                <label for="{{ form.video.id_for_label }}">{{ form.video.label }}</label><br>
+                <input type="file" name="video" id="{{ form.video.id_for_label }}">
+                
+                {% if record.video %}
+                    <div style="margin-top: 10px;">
+                        <video controls style="max-width: 150px; height: auto;">
+                            <source src="{{ record.video.url }}" type="video/mp4">
+                            ブラウザが video タグに対応していません。
+                        </video>
+                    </div>
+                {% endif %}
             </div>
         </div>
 

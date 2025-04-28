@@ -20,9 +20,9 @@
         </div>
         <div style="margin-bottom: 15px;">
             <label for="{{ form.cover_image.id_for_label }}" style="font-weight: bold; display: inline-block; width: 150px;">{{ form.cover_image.label }}：</label>
-            {{ form.cover_image }}
+            <input type="file" name="cover_image" id="{{ form.cover_image.id_for_label }}">
         </div>
-
+        
         {% if book.cover_image %}
             <div style="margin-bottom: 15px;">
                 <p>現在の表紙：</p>
