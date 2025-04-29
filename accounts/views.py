@@ -266,6 +266,7 @@ def accept_invitation(request, invite_token):
 
     # 招待が無効だった時
     if not invitation.is_valid():
+        messages.error(request, "この招待URLはすでに使用されています。")
         return redirect('accounts:invalid_invitation')
 
     # パスワードのルール表示
